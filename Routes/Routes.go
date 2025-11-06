@@ -1,17 +1,14 @@
 package Routes
 
 import (
+	"Polybub/Routes/ApiRoutes"
 	"net/http"
 )
 
 func AddRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/foobar", Handler)
+	ApiRoutes.AddApiRoutes(mux)
 
 	return mux
-}
-
-func Handler(w http.ResponseWriter, req *http.Request) {
-	println("blah blah blah")
 }
