@@ -1,0 +1,7 @@
+{   
+    "env": "dev",
+    "connection": "asdf",
+	"pepper": "asdf",
+    "port": "8090",
+    "hostname": "asdf"
+}

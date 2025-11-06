@@ -6,14 +6,15 @@ import (
 	"github.com/rs/cors"
 
 	"Polybub/Routes"
+	"Polybub/Utilities"
 )
 
 func main() {
-	baseUrl := "http://localhost"
+	Utilities.GlobalConfig = Utilities.GetConfig()
 
 	corsHandler := cors.New(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
-		AllowedOrigins: []string{baseUrl},
+		AllowedOrigins: []string{Utilities.GetCurrentEnv(Utilities.GlobalConfig)},
 	})
 
 	mux := Routes.AddRoutes()
