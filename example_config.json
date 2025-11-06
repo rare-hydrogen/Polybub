@@ -1,7 +1,9 @@
 {   
-    "env": "dev",
+    "env": "development",
     "connection": "asdf",
 	"pepper": "asdf",
     "port": "8090",
-    "hostname": "asdf"
+    "hostname": "asdf",
+    "apiTitle": "asdf",
+    "apiVersion": "1.0.0"
 }

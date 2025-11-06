@@ -12,6 +12,8 @@ type Config struct {
 	Pepper     string `json:"pepper"`
 	Port       string `json:"port"`
 	Hostname   string `json:"hostname"`
+	ApiTitle   string `json:"apiTitle"`
+	ApiVersion string `json:"apiVersion"`
 }
 
 var GlobalConfig Config
