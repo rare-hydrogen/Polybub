@@ -11,9 +11,11 @@ type Config struct {
 	Connection string `json:"connection"`
 	Pepper     string `json:"pepper"`
 	Port       string `json:"port"`
-	Hostname   string `json:"hostname"`
+	Domain     string `json:"domain"`
+	TopDomain  string `json:"topDomain"`
 	ApiTitle   string `json:"apiTitle"`
 	ApiVersion string `json:"apiVersion"`
+	CookieName string `json:"cookieName"`
 }
 
 var GlobalConfig Config
@@ -39,10 +41,18 @@ func GetConfigByPath(path string) Config {
 	return config
 }
 
-func GetCurrentEnv(config Config) string {
+func GetBaseUrl(config Config) string {
 	if config.Env == "production" {
-		return "http://" + config.Hostname
+		return "http://" + config.Domain + config.TopDomain
 	} else {
 		return "http://localhost" + ":" + config.Port
+	}
+}
+
+func GetDomain(config Config) string {
+	if config.Env == "production" {
+		return config.Domain
+	} else {
+		return "localhost"
 	}
 }

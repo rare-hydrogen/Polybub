@@ -12,7 +12,7 @@ import (
 
 func main() {
 	Utilities.GlobalConfig = Utilities.GetConfig()
-	baseUrl := Utilities.GetCurrentEnv(Utilities.GlobalConfig)
+	baseUrl := Utilities.GetBaseUrl(Utilities.GlobalConfig)
 
 	corsHandler := cors.New(cors.Options{
 		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},

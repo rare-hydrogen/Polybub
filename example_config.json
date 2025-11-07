@@ -3,7 +3,9 @@
     "connection": "asdf",
 	"pepper": "asdf",
     "port": "8090",
-    "hostname": "asdf",
+    "domain": "asdf",
+    "topDomain": ".com",
     "apiTitle": "asdf",
-    "apiVersion": "1.0.0"
+    "apiVersion": "1.0.0",
+    "cookieName": "asdf"
 }
