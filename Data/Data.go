@@ -1,6 +1,7 @@
 package Data
 
 import (
+	"Polybub/Data/Callbacks"
 	"Polybub/Utilities"
 	"time"
 
@@ -19,6 +20,8 @@ func GetConnection() *gorm.DB {
 	if err != nil {
 		panic("failed to connect to database")
 	}
+
+	Callbacks.SetCallbacks(db)
 
 	db.Exec("PRAGMA foreign_keys = ON")
 
