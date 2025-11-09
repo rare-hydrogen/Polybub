@@ -1,4 +1,4 @@
-package jsend
+package Jsend
 
 import (
 	"encoding/json"

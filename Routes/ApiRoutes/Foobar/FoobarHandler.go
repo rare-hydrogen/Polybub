@@ -3,7 +3,7 @@ package Foobar
 import (
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
-	"Polybub/jsend"
+	"Polybub/Jsend"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -29,27 +29,27 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 func getSingle(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
 	d, err := Services.ReadSingleFooBar(int32(id))
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
-	jsend.Success(w, d)
+	Jsend.Success(w, d)
 }
 
 func getMany(w http.ResponseWriter, req *http.Request) {
 	d, err := Services.ReadManyFooBar()
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
-	jsend.Success(w, d)
+	Jsend.Success(w, d)
 }
 
 func post(w http.ResponseWriter, req *http.Request) {
@@ -57,17 +57,17 @@ func post(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.CreateFooBar(dto)
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
-	jsend.Success(w, d)
+	Jsend.Success(w, d)
 }
 
 func patch(w http.ResponseWriter, req *http.Request) {
@@ -75,31 +75,31 @@ func patch(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.UpdateFooBar(dto)
 	if err != nil {
-		jsend.Error(w, err.Error(), http.StatusInternalServerError)
+		Jsend.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	jsend.Success(w, d)
+	Jsend.Success(w, d)
 }
 
 func delete(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
 	err = Services.SoftDeleteFooBar(int32(id))
 	if err != nil {
-		jsend.Error(w, err.Error())
+		Jsend.Error(w, err.Error())
 		return
 	}
 
-	jsend.Success(w, nil)
+	Jsend.Success(w, nil)
 }
