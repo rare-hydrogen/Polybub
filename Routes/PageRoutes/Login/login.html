@@ -1,0 +1,39 @@
+<body>
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container is-max-tablet">
+        <h1 class="title">Login</h1>
+        <form
+          hx-post="/user-login"
+          hx-headers='js:{
+            Username: document.getElementById("username").value, 
+            Password: document.getElementById("password").value
+          }'
+        >
+          <div class="field">
+            <input
+              id="username"
+              class="input"
+              type="text"
+              placeholder="Username"
+              value=""
+            />
+          </div>
+          <div class="field">
+            <input
+              id="password"
+              class="input"
+              type="password"
+              placeholder="Password"
+              value=""
+            />
+          </div>
+          <div class="level">
+            <button class="button is-primary" type="submit">Submit</button>
+            <a class="level-left" href="/forgot-password">Forgot Password</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</body>
