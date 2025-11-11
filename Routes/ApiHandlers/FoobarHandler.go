@@ -1,4 +1,4 @@
-package Foobar
+package ApiHandlers
 
 import (
 	"Polybub/Data/Models"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodGet:
 		if req.URL.Query().Has("id") {

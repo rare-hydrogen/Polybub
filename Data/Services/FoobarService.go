@@ -5,38 +5,10 @@ import (
 	"Polybub/Data/Models"
 )
 
-func ReadSingleFooBar(Id int32) (Models.FooBar, error) {
-	var db = Data.GetConnection()
-
-	Single := Models.FooBar{}
-	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", Id).
-		First(&Single).
-		Error
-	if err != nil {
-		return Models.FooBar{}, err
-	}
-
-	return Single, nil
-}
-
-func ReadManyFooBar() ([]Models.FooBar, error) {
-	var db = Data.GetConnection()
-
-	Many := []Models.FooBar{}
-	err := db.Find(&Many).Error
-	if err != nil {
-		return []Models.FooBar{}, err
-	}
-
-	return Many, nil
-}
-
 func CreateFooBar(data Models.FooBar) (Models.FooBar, error) {
 	var db = Data.GetConnection()
 
 	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", data.Id).
 		Save(&data).
 		Error
 	if err != nil {
@@ -46,27 +18,54 @@ func CreateFooBar(data Models.FooBar) (Models.FooBar, error) {
 	return data, nil
 }
 
-func UpdateFooBar(data Models.FooBar) (Models.FooBar, error) {
+func ReadSingleFooBar(id int32) (Models.FooBar, error) {
 	var db = Data.GetConnection()
 
-	Single := Models.FooBar{}
+	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", data.Id).
-		Updates(data).
-		First(&Single).
+		Where("Id = ?", id).
+		First(&single).
 		Error
 	if err != nil {
 		return Models.FooBar{}, err
 	}
 
-	return Single, nil
+	return single, nil
 }
 
-func SoftDeleteFooBar(Id int32) error {
+func ReadManyFooBar() ([]Models.FooBar, error) {
+	var db = Data.GetConnection()
+
+	many := []Models.FooBar{}
+	err := db.Find(&many).Error
+	if err != nil {
+		return []Models.FooBar{}, err
+	}
+
+	return many, nil
+}
+
+func UpdateFooBar(data Models.FooBar) (Models.FooBar, error) {
+	var db = Data.GetConnection()
+
+	single := Models.FooBar{}
+	err := db.Model(&Models.FooBar{}).
+		Where("Id = ?", data.Id).
+		Updates(data).
+		First(&single).
+		Error
+	if err != nil {
+		return Models.FooBar{}, err
+	}
+
+	return single, nil
+}
+
+func SoftDeleteFooBar(id int32) error {
 	var db = Data.GetConnection()
 
 	var data = &Models.FooBar{
-		Id: Id,
+		Id: id,
 	}
 
 	err := db.Model(&Models.FooBar{}).
