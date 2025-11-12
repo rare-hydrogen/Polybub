@@ -49,6 +49,7 @@ func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page strin
 	cookie := &http.Cookie{
 		Name:     Utilities.GlobalConfig.CookieName,
 		Value:    tokenString,
+		Path:     "/",
 		Domain:   Utilities.GetDomain(Utilities.GlobalConfig),
 		Expires:  time.Now().Add(24 * time.Hour),
 		SameSite: http.SameSiteStrictMode,
@@ -68,6 +69,7 @@ func DeleteTokenAndRedirect(w http.ResponseWriter, page string) {
 	cookie := &http.Cookie{
 		Name:     Utilities.GlobalConfig.CookieName,
 		Value:    "",
+		Path:     "/",
 		Domain:   Utilities.GetDomain(Utilities.GlobalConfig),
 		Expires:  time.Unix(0, 0),
 		SameSite: http.SameSiteStrictMode,
