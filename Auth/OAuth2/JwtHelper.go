@@ -30,6 +30,10 @@ func GetClaimsFromTokenString(tokenString string) (Claims, error) {
 	}
 
 	claims := jwtObj.Claims.(jwt.MapClaims)
+	permissions, err := DecompressPermsFromClaims(claims)
+	if err != nil {
+		return Claims{}, err
+	}
 
 	var c Claims
 	c.Name = claims["nme"].(string)
@@ -39,6 +43,7 @@ func GetClaimsFromTokenString(tokenString string) (Claims, error) {
 	c.Expiration = time.Unix(int64(claims["exp"].(float64)), 0)
 	c.NotBefore = time.Unix(int64(claims["nbf"].(float64)), 0)
 	c.IssuedAt = time.Unix(int64(claims["iat"].(float64)), 0)
+	c.Permissions = permissions
 
 	return c, nil
 }

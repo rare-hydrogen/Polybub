@@ -8,11 +8,11 @@ import (
 	"net/http"
 )
 
+// TODO: Fix this
 type dddd struct {
 	Name string
 }
 
-// Handler
 func Handler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		path := "Routes/PageRoutes/Dashboard/dashboard.html"
@@ -21,14 +21,17 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 			Jsend.Error(w, "Error reading token", http.StatusInternalServerError)
 			return
 		}
+
 		claims, err := OAuth2.GetClaimsFromTokenString(tokenString)
 		if err != nil {
 			Jsend.Error(w, "Error reading token", http.StatusInternalServerError)
 			return
 		}
+
 		data := dddd{
 			Name: claims.Name,
 		}
+
 		body, err := GlobalWrapper.GetSafeHtml(path, data)
 		if err != nil {
 			Jsend.Error(w, "Error reading template", http.StatusInternalServerError)

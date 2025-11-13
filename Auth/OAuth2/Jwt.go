@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"Polybub/Data/Models"
 	"Polybub/Utilities"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -32,8 +33,13 @@ func readPrivateKey() (*rsa.PrivateKey, error) {
 	return privateKey.(*rsa.PrivateKey), nil
 }
 
-func NewJwt(name string, userId int32, userGroup int32) (string, error) {
+func NewJwt(name string, userId int32, userGroup int32, permissions []Models.Permission) (string, error) {
 	key, err := readPrivateKey()
+	if err != nil {
+		return "", err
+	}
+
+	compressedPermissions, err := CompressPermsForClaims(permissions)
 	if err != nil {
 		return "", err
 	}
@@ -46,6 +52,7 @@ func NewJwt(name string, userId int32, userGroup int32) (string, error) {
 		"exp": time.Now().Add(24 * time.Hour).Unix(),
 		"nbf": time.Now().Unix(),
 		"iat": time.Now().Unix(),
+		"prm": compressedPermissions,
 	}
 
 	t := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)

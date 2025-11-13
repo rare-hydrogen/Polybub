@@ -40,8 +40,13 @@ func Login(username string, password string) (string, error) {
 		return "", errors.New("incorrect password")
 	}
 
+	permissions, err := ReadUsersPermissions(user.Id)
+	if err != nil {
+		return "", err
+	}
+
 	name := user.FirstName + " " + user.LastName
-	jwtString, err := OAuth2.NewJwt(name, user.Id, user.UserGroup)
+	jwtString, err := OAuth2.NewJwt(name, user.Id, user.UserGroup, permissions)
 	if err != nil {
 		return "", err
 	}

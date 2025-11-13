@@ -2,6 +2,7 @@ package Tests
 
 import (
 	"Polybub/Auth/OAuth2"
+	"Polybub/Data/Models"
 	"Polybub/Tests/TestHelpers"
 	"Polybub/Utilities"
 	"testing"
@@ -16,9 +17,12 @@ func Test_Given_Valid_When_NewJwt_Then_ReturnsTokenString(t *testing.T) {
 	name := "asdf"
 	userId := int32(1)
 	userGroup := int32(1)
+	permissions := []Models.Permission{
+		OAuth2.NewPerm("FooBar", true, true, true, true),
+	}
 
 	// Act
-	s, err := OAuth2.NewJwt(name, userId, userGroup)
+	s, err := OAuth2.NewJwt(name, userId, userGroup, permissions)
 	length := len(s)
 	bytesize := unsafe.Sizeof(s)
 

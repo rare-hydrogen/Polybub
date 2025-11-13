@@ -7,7 +7,6 @@ import (
 	"net/http"
 )
 
-// Handler
 func PageHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		path := "Routes/PageRoutes/Login/login.html"

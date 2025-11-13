@@ -1,13 +1,17 @@
 package OAuth2
 
-import "time"
+import (
+	"Polybub/Data/Models"
+	"time"
+)
 
 type Claims struct {
-	Name       string
-	Issuer     string
-	Subject    int32
-	Audience   int32
-	Expiration time.Time
-	NotBefore  time.Time
-	IssuedAt   time.Time
+	Name        string
+	Issuer      string
+	Subject     int32
+	Audience    int32
+	Expiration  time.Time
+	NotBefore   time.Time
+	IssuedAt    time.Time
+	Permissions []Models.Permission
 }
