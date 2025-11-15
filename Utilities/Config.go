@@ -21,11 +21,7 @@ type Config struct {
 var GlobalConfig Config
 
 func GetConfig() Config {
-	return GetConfigByPath("config.json")
-}
-
-func GetConfigByPath(path string) Config {
-	file, err := os.Open(path)
+	file, err := os.Open("config.json")
 	if err != nil {
 		log.Fatal(err)
 	}

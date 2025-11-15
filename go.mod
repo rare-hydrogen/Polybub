@@ -3,6 +3,7 @@ module Polybub
 go 1.24.0
 
 require (
+	github.com/Rhymond/go-money v1.0.15
 	github.com/go-swagno/swagno-http v0.0.0-20220905203049-935bab5403fa
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/uuid v1.4.0
