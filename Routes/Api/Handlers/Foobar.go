@@ -1,4 +1,4 @@
-package ApiHandlers
+package Api
 
 import (
 	"Polybub/Data/Models"

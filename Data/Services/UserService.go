@@ -63,6 +63,21 @@ func ReadSingleUser(id int32) (userVariant, error) {
 	return getUserVariant(single), nil
 }
 
+func GetIdByEmail(email string) (int32, error) {
+	var db = Data.GetConnection()
+
+	single := Models.User{}
+	err := db.Model(&Models.User{}).
+		Where("AccountEmail = ?", email).
+		First(&single).
+		Error
+	if err != nil {
+		return 0, err
+	}
+
+	return single.Id, nil
+}
+
 func GetIdByUsername(username string) (int32, error) {
 	var db = Data.GetConnection()
 

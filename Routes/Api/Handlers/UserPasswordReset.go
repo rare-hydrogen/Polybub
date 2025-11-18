@@ -1,4 +1,4 @@
-package ApiHandlers
+package Api
 
 import (
 	"Polybub/Data/Services"
@@ -20,9 +20,13 @@ func UserPasswordResetHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func requestReset(w http.ResponseWriter, req *http.Request) {
-	var username = "ts"
+	givenEmail := req.Header.Get("email")
+	if givenEmail == "" {
+		Jsend.Error(w, "Invalid email.", http.StatusBadRequest)
+		return
+	}
 
-	userId, err := Services.GetIdByUsername(username)
+	userId, err := Services.GetIdByEmail(givenEmail)
 	if err != nil {
 		Jsend.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
@@ -44,8 +48,9 @@ func attemptReset(w http.ResponseWriter, req *http.Request) {
 		Jsend.Error(w, "Invalid request.", http.StatusBadRequest)
 		return
 	}
+	// TODO: Fix this
 	givenKey := req.URL.Query().Get("key")
-	newPassword := "" // TODO: Replace this
+	newPassword := ""
 
 	actualKey, err := Services.GetResetKey(int32(givenUserId))
 	if err != nil {

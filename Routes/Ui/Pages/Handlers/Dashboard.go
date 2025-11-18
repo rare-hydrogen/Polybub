@@ -1,9 +1,9 @@
-package Dashboard
+package Ui
 
 import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Jsend"
-	"Polybub/Routes/GlobalWrapper"
+	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"fmt"
 	"net/http"
 )
@@ -13,9 +13,9 @@ type dddd struct {
 	Name string
 }
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func DashboardHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		path := "Routes/PageRoutes/Dashboard/dashboard.html"
+		path := "Routes/Ui/Pages/HtmlPages/dashboard.html"
 		tokenString, err := OAuth2.GetTokenStringFromHeader(req)
 		if err != nil {
 			Jsend.Error(w, "Error reading token", http.StatusInternalServerError)

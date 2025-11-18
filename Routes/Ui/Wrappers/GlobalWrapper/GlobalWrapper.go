@@ -12,7 +12,6 @@ type globalWrapperVariant struct {
 	Body  template.HTML
 }
 
-// TODO: Move to Utilities?
 func GetSafeHtml(filePath string, data any) (string, error) {
 	body, err := template.
 		New(filepath.Base(filePath)).
@@ -28,7 +27,7 @@ func GetSafeHtml(filePath string, data any) (string, error) {
 }
 
 func GetWrappedTemplate(safeHtml string) (string, error) {
-	wrapPath := "Routes/GlobalWrapper/global.html"
+	wrapPath := "Routes/Ui/Wrappers/GlobalWrapper/global.html"
 	wrap, err := template.ParseFiles(wrapPath)
 	if err != nil {
 		return "", err

@@ -1,15 +1,15 @@
-package Login
+package Ui
 
 import (
 	"Polybub/Jsend"
-	"Polybub/Routes/GlobalWrapper"
+	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"fmt"
 	"net/http"
 )
 
-func PageHandler(w http.ResponseWriter, req *http.Request) {
+func LoginHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		path := "Routes/PageRoutes/Login/login.html"
+		path := "Routes/Ui/Pages/HtmlPages/login.html"
 		data := ""
 		body, err := GlobalWrapper.GetSafeHtml(path, data)
 		if err != nil {

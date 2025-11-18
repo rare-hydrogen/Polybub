@@ -1,4 +1,4 @@
-package StaticRoutes
+package Static
 
 import (
 	"net/http"

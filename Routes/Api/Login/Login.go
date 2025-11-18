@@ -1,4 +1,4 @@
-package ApiHandlers
+package Login
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -32,6 +32,6 @@ func login(w http.ResponseWriter, req *http.Request) {
 	OAuth2.StoreTokenAndRedirect(w, jwtString, "dashboard")
 }
 
-func logout(w http.ResponseWriter, req *http.Request) {
+func logout(w http.ResponseWriter, _ *http.Request) {
 	OAuth2.DeleteTokenAndRedirect(w, "login")
 }

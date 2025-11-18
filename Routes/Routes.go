@@ -1,18 +1,18 @@
 package Routes
 
 import (
-	"Polybub/Routes/ApiRoutes"
-	"Polybub/Routes/PageRoutes"
-	"Polybub/Routes/StaticRoutes"
+	"Polybub/Routes/Api"
+	"Polybub/Routes/Static"
+	"Polybub/Routes/Ui"
 	"net/http"
 )
 
 func AddRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	ApiRoutes.AddApiRoutes(mux)
-	PageRoutes.AddPageRoutes(mux)
-	StaticRoutes.AddStaticRoutes(mux)
+	Api.AddApiRoutes(mux)
+	Static.AddStaticRoutes(mux)
+	Ui.AddUiRoutes(mux)
 
 	return mux
 }
