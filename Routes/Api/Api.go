@@ -2,12 +2,14 @@ package Api
 
 import (
 	"Polybub/Auth/BasicAuth"
-	Api "Polybub/Routes/Api/Handlers"
+	"Polybub/Routes/Api/FoobarApi"
+	"Polybub/Routes/Api/LoginApi"
+	"Polybub/Routes/Api/UserPasswordResetApi"
 	"net/http"
 )
 
 func AddApiRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/api/user-login", Api.LoginHandler)
-	mux.HandleFunc("/api/user-password-reset", Api.UserPasswordResetHandler)
-	mux.HandleFunc("/api/foobar-basic", BasicAuth.BasicAuth(Api.FooBarHandler, "username", "password"))
+	mux.HandleFunc("/api/user-login", LoginApi.Handler)
+	mux.HandleFunc("/api/user-password-reset", UserPasswordResetApi.Handler)
+	mux.HandleFunc("/api/foobar-basic", BasicAuth.BasicAuth(FoobarApi.Handler, "username", "password"))
 }

@@ -1,0 +1,19 @@
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-1">Hello there...</h1>
+        <h2 class="subtitle is-3">{{.Name}}<h2>
+      </div>
+      <br>
+      <br>
+      <div
+          hx-get="/comp/foobar"
+          hx-swap="outerHTML"
+          hx-target="this"
+          hx-trigger="load"
+      >
+      </div>
+    </div>
+  </section>
+</body>

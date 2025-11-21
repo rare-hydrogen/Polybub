@@ -1,4 +1,4 @@
-package Ui
+package ForgotPassword
 
 import (
 	"Polybub/Jsend"
@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-func LoginHandler(w http.ResponseWriter, req *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		path := "Routes/Ui/Pages/HtmlPages/login.html"
+		path := "Routes/Ui/Pages/ForgotPassword/forgot-password.html"
 		data := ""
 		body, err := GlobalWrapper.GetSafeHtml(path, data)
 		if err != nil {

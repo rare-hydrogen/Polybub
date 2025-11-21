@@ -1,4 +1,4 @@
-package Login
+package LoginApi
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func LoginHandler(w http.ResponseWriter, req *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
 		login(w, req)
@@ -32,6 +32,6 @@ func login(w http.ResponseWriter, req *http.Request) {
 	OAuth2.StoreTokenAndRedirect(w, jwtString, "dashboard")
 }
 
-func logout(w http.ResponseWriter, _ *http.Request) {
+func logout(w http.ResponseWriter, req *http.Request) {
 	OAuth2.DeleteTokenAndRedirect(w, "login")
 }

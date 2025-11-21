@@ -1,13 +1,16 @@
-package UI
+package FooBar
 
 import (
+	"Polybub/Data/Models"
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"fmt"
 	"net/http"
+
+	"github.com/Rhymond/go-money"
 )
 
-func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		get(w, req)
 	} else {
@@ -16,9 +19,16 @@ func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func get(w http.ResponseWriter, req *http.Request) {
-	// Frontend
-	path := "Routes/Components/Dashboards/ProviderDashboard/provider-dashboard.html"
-	htmlText, err := GlobalWrapper.GetSafeHtml(path, nil)
+	path := "Routes/Ui/Components/FooBar/foobar.html"
+	data := Models.FooBar{
+		Id:       1,
+		Name:     "Foonius Barius",
+		Type:     "Type 1",
+		Amount:   100,
+		Currency: *money.GetCurrency("USD"),
+	}
+
+	htmlText, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
 		Jsend.Error(w, "error reading template", http.StatusBadRequest)
 		return
