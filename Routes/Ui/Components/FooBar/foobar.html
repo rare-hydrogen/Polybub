@@ -2,10 +2,25 @@
   <h1>FooBar Component</h1>
   <div>
     <p>What is an example of a FooBar?</p>
-    <p>Id = {{.Id}}</p>
-    <p>Name = {{.Name}}</p>
-    <p>Type = {{.Type}}</p>
-    <p>Amount = {{.Amount}}</p>
-    <p>Currency = {{.Currency.Code}}</p>
+    <ul>
+      <li>Name = {{.Name}}</li>
+      <li>Type = {{.Type}}</li>
+      <li>Amount = {{.Amount}} (1000 maximum)</li>
+      <li>Currency = {{.Currency.Code}}</li>
+    </ul>
   </div>
+  <br>
+  <h2>Create New FooBar<h2>
+  <form 
+    hx-post="comp/foobar"
+    hx-ext="json-enc"
+  >
+    <div class="field" style="max-width:50%">
+      <input type="text" name="Name" value="" placeholder="Name" class="input">
+      <input type="text" name="Type" value="" placeholder="Type" class="input">
+      <input type="number" name="Amount" value="" placeholder="Amount" class="input">
+      <input type="text" name="Currency" value="USD" placeholder="Currency" disabled class="input">
+      <input type="submit" class="is-primary button">
+    </div>
+  </form>
 </div>

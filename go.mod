@@ -4,6 +4,7 @@ go 1.24.0
 
 require (
 	github.com/Rhymond/go-money v1.0.15
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-swagno/swagno-http v0.0.0-20220905203049-935bab5403fa
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/uuid v1.4.0
@@ -15,6 +16,7 @@ require (
 )
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

@@ -1,0 +1,9 @@
+.toast {
+  font-weight: bold;
+  gap: 0.5rem;
+  bottom: 1rem;
+  right: 1rem;
+  position: absolute !important;
+  z-index: 1;
+  min-width: 10rem;
+}
