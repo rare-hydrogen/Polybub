@@ -8,6 +8,7 @@ require (
 	github.com/go-swagno/swagno-http v0.0.0-20220905203049-935bab5403fa
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/uuid v1.4.0
+	github.com/pquerna/otp v1.5.0
 	github.com/rs/cors v1.11.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/crypto v0.9.0
@@ -17,6 +18,7 @@ require (
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
+	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

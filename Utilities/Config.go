@@ -7,15 +7,19 @@ import (
 )
 
 type Config struct {
-	Env        string `json:"env"`
-	Connection string `json:"connection"`
-	Pepper     string `json:"pepper"`
-	Port       string `json:"port"`
-	Domain     string `json:"domain"`
-	TopDomain  string `json:"topDomain"`
-	ApiTitle   string `json:"apiTitle"`
-	ApiVersion string `json:"apiVersion"`
-	CookieName string `json:"cookieName"`
+	Env          string `json:"env"`
+	Connection   string `json:"connection"`
+	Pepper       string `json:"pepper"`
+	Port         string `json:"port"`
+	Domain       string `json:"domain"`
+	TopDomain    string `json:"topDomain"`
+	ApiTitle     string `json:"apiTitle"`
+	ApiVersion   string `json:"apiVersion"`
+	CookieName   string `json:"cookieName"`
+	SmtpAddress  string `json:"smtpAddress"`
+	SmtpPassword string `json:"smtpPassword"`
+	SmtpHost     string `json:"smtpHost"`
+	SmtpPort     string `json:"smtpPort"`
 }
 
 var GlobalConfig Config

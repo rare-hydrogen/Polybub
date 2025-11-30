@@ -7,5 +7,9 @@
     "topDomain": ".com",
     "apiTitle": "asdf",
     "apiVersion": "1.0.0",
-    "cookieName": "asdf"
+    "cookieName": "asdf",
+    "smtpAddress": "asdf",
+    "smtpPassword": "asdf",
+    "smtpHost": "asdf",
+    "smtpPort": "asdf"
 }
