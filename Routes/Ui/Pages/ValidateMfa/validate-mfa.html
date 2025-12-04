@@ -1,0 +1,29 @@
+<body>
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container is-max-tablet">
+        <h1 class="title">MFA Authentication</h1>
+        <p>Get the code from your third-party authenticator app:</p>
+        <form
+          hx-post="api/validate-mfa"
+          hx-headers='js:{
+            Code: document.getElementById("code").value, 
+          }'
+        >
+          <div class="field">
+            <input
+              id="code"
+              class="input"
+              type="text"
+              placeholder="Code"
+              value=""
+            />
+          </div>
+          <div class="level">
+            <button class="button is-primary" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</body>

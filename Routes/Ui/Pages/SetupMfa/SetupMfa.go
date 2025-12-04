@@ -54,11 +54,11 @@ func getData(req *http.Request) (variantMfaData, error) {
 	}
 
 	// Use claims
-	user, err := Services.ReadSingleUser(claims.Subject)
+	user, err := Services.UnsafeReadSingleUser(claims.Subject)
 	if err != nil {
 		return variantMfaData{}, err
 	}
-	imgBuf, key, err := Totp.BeginTotp(user.Username)
+	imgBuf, key, err := Totp.BeginTotp(user)
 	if err != nil {
 		return variantMfaData{}, err
 	}

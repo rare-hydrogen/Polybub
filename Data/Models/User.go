@@ -14,6 +14,7 @@ type User struct {
 	AccountEmail string `gorm:"column:AccountEmail;type:TEXT" json:"AccountEmail"`
 	AccountPhone string `gorm:"column:AccountPhone;type:TEXT" json:"AccountPhone"`
 	UserGroup    int32  `gorm:"column:UserGroup;type:INTEGER" json:"UserGroup"`
+	TotpKey      string `gorm:"column:TotpKey;type:TEXT" json:"TotpKey"`
 	Audit.AuditFields
 }
 

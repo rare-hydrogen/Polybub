@@ -10,6 +10,7 @@ CREATE TABLE Users (
 	AccountEmail TEXT NOT NULL,
 	AccountPhone TEXT NOT NULL,
 	UserGroup INTEGER NOT NULL,
+	TotpKey TEXT NOT NULL,
     CreatedAt DATETIME,
     UpdatedAt DATETIME,
     DeletedAt DATETIME,

@@ -145,3 +145,34 @@ func SoftDeleteUser(id int32) error {
 
 	return nil
 }
+
+// Unsafe
+func UnsafeReadSingleUser(id int32) (Models.User, error) {
+	var db = Data.GetConnection()
+
+	single := Models.User{}
+	err := db.Model(&Models.User{}).
+		Where("Id = ?", id).
+		First(&single).
+		Error
+	if err != nil {
+		return Models.User{}, err
+	}
+
+	return single, nil
+}
+
+func UnsafeGetUserByUsername(username string) (Models.User, error) {
+	var db = Data.GetConnection()
+
+	user := Models.User{}
+	err := db.Model(&Models.User{}).
+		Where("Username = ?", username).
+		First(&user).
+		Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

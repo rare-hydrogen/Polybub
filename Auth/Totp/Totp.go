@@ -9,7 +9,9 @@ package Totp
 // 7. Until successful validation, disable TOTP for that user
 
 import (
+	"Polybub/Data/Models"
 	"Polybub/Utilities"
+	"errors"
 
 	"github.com/pquerna/otp/totp"
 
@@ -17,11 +19,19 @@ import (
 	"image/png"
 )
 
-func BeginTotp(username string) (bytes.Buffer, string, error) {
+func encryptTotpKey(TotpKey string) (string, error) {
+	return TotpKey, nil
+}
+
+func decryptTotpKey(EncryptedTotpKey string) (string, error) {
+	return EncryptedTotpKey, nil
+}
+
+func BeginTotp(user Models.User) (bytes.Buffer, string, error) {
 	// Create a key
 	key, err := totp.Generate(totp.GenerateOpts{
 		Issuer:      Utilities.GlobalConfig.Domain,
-		AccountName: username,
+		AccountName: user.Username,
 	})
 	if err != nil {
 		return bytes.Buffer{}, "", err
@@ -39,18 +49,16 @@ func BeginTotp(username string) (bytes.Buffer, string, error) {
 	return buf, key.Secret(), err
 }
 
-/*
-func FinishTotp() {
-	// Now Validate that the user's successfully added the passcode.
-	fmt.Println("Validating TOTP...")
-	passcode := promptForPasscode()
-	valid := totp.Validate(passcode, key.Secret())
+func CheckTotp(user Models.User, code string) error {
+	key, err := decryptTotpKey(user.TotpKey)
+	if err != nil {
+		return err
+	}
+
+	valid := totp.Validate(code, key)
 	if valid {
-		println("Valid passcode!")
-		os.Exit(0)
+		return nil
 	} else {
-		println("Invalid passcode!")
-		os.Exit(1)
+		return errors.New("invalid code")
 	}
 }
-*/
