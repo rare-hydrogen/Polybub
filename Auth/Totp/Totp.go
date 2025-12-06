@@ -62,3 +62,17 @@ func CheckTotp(user Models.User, code string) error {
 		return errors.New("invalid code")
 	}
 }
+
+func KeyMatchTotp(key string, code string) error {
+	_, err := decryptTotpKey(key)
+	if err != nil {
+		return err
+	}
+
+	valid := totp.Validate(code, key)
+	if valid {
+		return nil
+	} else {
+		return errors.New("invalid key")
+	}
+}

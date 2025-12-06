@@ -45,19 +45,39 @@ func Login(username string, password string) (Models.User, string, error) {
 }
 
 func MfaLogin(userId int32, code string) (Models.User, string, error) {
-	// get the user
 	user, err := UnsafeReadSingleUser(userId)
 	if err != nil {
 		return Models.User{}, "", err
 	}
 
-	// check if the code is valid
 	err = Totp.CheckTotp(user, code)
 	if err != nil {
 		return Models.User{}, "", err
 	}
 
-	// if valid, return the user and jwt
+	return getJwtFromUser(user)
+}
+
+func MfaUpdate(userId int32, key string, code string) (Models.User, string, error) {
+	// Simple check to make sure the supplied key and code work together
+	// because the user could submit a key that wasn't made by this backend
+	err := Totp.KeyMatchTotp(key, code)
+	if err != nil {
+		return Models.User{}, "", err
+	}
+
+	_, err = UpdateUser(Models.User{
+		Id:      userId,
+		TotpKey: key,
+	})
+	if err != nil {
+		return Models.User{}, "", err
+	}
+
+	user, err := UnsafeReadSingleUser(userId)
+	if err != nil {
+		return Models.User{}, "", err
+	}
 	return getJwtFromUser(user)
 }
 

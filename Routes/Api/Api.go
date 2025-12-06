@@ -14,6 +14,6 @@ import (
 func AddApiRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/user-login", LoginApi.Handler)
 	mux.HandleFunc("/api/user-password-reset", UserPasswordResetApi.Handler)
-	OAuth2.JwtPermit(mux, "/api/validate-mfa", ValidateMfaApi.Handler, Permissions.MFA_CODE_R, nil)
+	OAuth2.JwtPermit(mux, "/api/validate-mfa", ValidateMfaApi.Handler, Permissions.MFA_CODE_CRU, nil)
 	mux.HandleFunc("/api/foobar-basic", BasicAuth.BasicAuth(FoobarApi.Handler, "username", "password"))
 }

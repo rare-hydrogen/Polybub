@@ -3,7 +3,18 @@
     <div class="container is-max-tablet">
       <h1 class="title">Setup MFA</h1>
       <img src="{{.Image}}" alt="Blank" />
-      <p>Key: {{.Key}}</p>
+      <p> Key: <span id="key">{{.Key}}<span></p>
+      <br />
+      <div id="validate-button">
+      <a 
+        hx-get="/setup-mfa?form"
+        hx-swap="outerHTML"
+        hx-target="#validate-button"
+        class="button is-primary" 
+        href="/validate-mfa"
+      >Validate Key</a>
+      <a class="button is-secondary" href="/dashboard">Cancel</a>
+      </div>
     </div>
   </div>
 </section>

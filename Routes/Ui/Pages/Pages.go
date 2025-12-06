@@ -15,6 +15,8 @@ func AddPageRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/login", Login.Handler)
 	mux.HandleFunc("/forgot-password", ForgotPassword.Handler)
 	OAuth2.JwtPermit(mux, "/setup-mfa", SetupMfa.Handler, Permissions.DASHBOARD_R, nil) // TODO: Handle this permission
-	OAuth2.JwtPermit(mux, "/validate-mfa", ValidateMfa.Handler, Permissions.MFA_CODE_R, nil)
+	// TODO: Technically, the user could UN/PW auth, then use the temp JWT to update their MFA code.
+	// the put endpoint should require CRU and the post should just be R
+	OAuth2.JwtPermit(mux, "/validate-mfa", ValidateMfa.Handler, Permissions.MFA_CODE_CRU, nil)
 	OAuth2.JwtPermit(mux, "/dashboard", Dashboard.Handler, Permissions.DASHBOARD_R, nil)
 }

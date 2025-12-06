@@ -39,7 +39,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 	} else {
 		// Supply temporary MFA auth token
 		name := user.FirstName + " " + user.LastName
-		permissions := []Models.Permission{Permissions.MFA_CODE_R}
+		permissions := []Models.Permission{Permissions.MFA_CODE_CRU}
 		mfaJwtString, err := OAuth2.NewJwt(name, user.Id, user.UserGroup, permissions)
 		if err != nil {
 			Jsend.Error(w, "mfa validation failed", http.StatusBadRequest)
