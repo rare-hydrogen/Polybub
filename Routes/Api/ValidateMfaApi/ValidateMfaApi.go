@@ -4,6 +4,7 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Services"
 	"Polybub/Jsend"
+	"Polybub/Utilities/Permissions"
 	"net/http"
 )
 
@@ -20,6 +21,12 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 }
 
 func post(w http.ResponseWriter, req *http.Request) {
+	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_R, nil)
+	if err != nil {
+		Jsend.Error(w, err.Error(), status)
+		return
+	}
+
 	// Users logging in
 	code := req.Header.Get("Code")
 	mfaTokenString, err := OAuth2.GetTokenStringFromHeader(req)
@@ -45,6 +52,12 @@ func post(w http.ResponseWriter, req *http.Request) {
 }
 
 func put(w http.ResponseWriter, req *http.Request) {
+	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_CRU, nil)
+	if err != nil {
+		Jsend.Error(w, err.Error(), status)
+		return
+	}
+
 	// Users updating their MFA TOTP key
 	code := req.Header.Get("Code")
 	key := req.Header.Get("Key")

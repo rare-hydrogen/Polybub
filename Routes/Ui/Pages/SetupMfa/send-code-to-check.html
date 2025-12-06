@@ -2,6 +2,7 @@
   <p>Get the code from your third-party authenticator app:</p>
   <form
     hx-put="/api/validate-mfa"
+    hx-swap="none"
     hx-headers='js:{
             Code: document.getElementById("code").value,
             Key: document.getElementById("key").innerText 
