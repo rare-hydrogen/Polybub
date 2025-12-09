@@ -15,8 +15,11 @@ func main() {
 	baseUrl := Utilities.GetBaseUrl(Utilities.GlobalConfig)
 
 	corsHandler := cors.New(cors.Options{
-		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
-		AllowedOrigins: []string{baseUrl},
+		AllowedMethods:   []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
+		AllowedOrigins:   []string{baseUrl},
+		AllowCredentials: true,
+		ExposedHeaders:   []string{"Authorization"},
+		//Debug:            true,
 	})
 
 	mux := Routes.AddRoutes()
