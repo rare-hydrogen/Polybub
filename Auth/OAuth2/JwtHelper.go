@@ -58,7 +58,7 @@ func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page strin
 		Domain:   Utilities.GetDomain(Utilities.GlobalConfig),
 		Expires:  time.Now().Add(24 * time.Hour),
 		SameSite: http.SameSiteStrictMode,
-		Secure:   true,
+		Secure:   Utilities.GlobalConfig.IsSecure,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)
@@ -78,7 +78,7 @@ func DeleteTokenAndRedirect(w http.ResponseWriter, page string) {
 		Domain:   Utilities.GetDomain(Utilities.GlobalConfig),
 		Expires:  time.Unix(0, 0),
 		SameSite: http.SameSiteStrictMode,
-		Secure:   true,
+		Secure:   Utilities.GlobalConfig.IsSecure,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)

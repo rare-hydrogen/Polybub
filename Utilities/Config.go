@@ -13,9 +13,10 @@ type Config struct {
 	Port         string `json:"port"`
 	Domain       string `json:"domain"`
 	TopDomain    string `json:"topDomain"`
+	CookieName   string `json:"cookieName"`
+	IsSecure     bool   `json:"isSecure"`
 	ApiTitle     string `json:"apiTitle"`
 	ApiVersion   string `json:"apiVersion"`
-	CookieName   string `json:"cookieName"`
 	SmtpAddress  string `json:"smtpAddress"`
 	SmtpPassword string `json:"smtpPassword"`
 	SmtpHost     string `json:"smtpHost"`

@@ -19,7 +19,7 @@ func main() {
 		AllowedOrigins:   []string{baseUrl},
 		AllowCredentials: true,
 		ExposedHeaders:   []string{"Authorization"},
-		//Debug:            true,
+		//Debug:          true,
 	})
 
 	mux := Routes.AddRoutes()
@@ -31,6 +31,13 @@ func main() {
 	}
 
 	if Utilities.GlobalConfig.Env == "production" {
-		http.ListenAndServe(":8090", handler)
+		if Utilities.GlobalConfig.IsSecure {
+			// TODO: Handle HTTPS
+			//certFile := "./certs/fullchain.pem"
+			//keyFile := "./certs/myserver.key"
+			//http.ListenAndServeTLS(":8090", certFile, keyFile, handler)
+		} else {
+			http.ListenAndServe(":8090", handler)
+		}
 	}
 }
