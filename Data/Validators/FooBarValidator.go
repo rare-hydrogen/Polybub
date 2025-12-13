@@ -32,7 +32,7 @@ var fooBarRules = FooBarRules{
 	},
 	AmountRule: []v.Rule{
 		v.Required,
-		v.Min(1),
-		v.Max(1000),
+		v.Min(1).Error("must not be lower than $0.01"),
+		v.Max(100000).Error("must not be over $1000.00"),
 	},
 }

@@ -13,9 +13,9 @@ type globalWrapperVariant struct {
 }
 
 func GetSafeHtml(filePath string, data any) (string, error) {
-	body, err := template.
-		New(filepath.Base(filePath)).
-		ParseFiles(filePath)
+	temp := template.New(filepath.Base(filePath))
+	temp.Funcs(FuncMap)
+	body, err := temp.ParseFiles(filePath)
 	if err != nil {
 		return "", err
 	}

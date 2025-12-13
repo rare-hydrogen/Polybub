@@ -10,8 +10,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/Rhymond/go-money"
 )
 
 func Handler(w http.ResponseWriter, req *http.Request) {
@@ -27,12 +25,15 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 
 func get(w http.ResponseWriter, req *http.Request) {
 	path := "Routes/Ui/Components/FooBar/foobar.html"
-	data := Models.FooBar{
-		Id:       1,
-		Name:     "Foonius Barius",
-		Type:     "Type 1",
-		Amount:   100,
-		Currency: *money.GetCurrency("USD"),
+	data, err := Services.ReadLatestFooBar()
+	if err != nil {
+		data = Models.FooBar{
+			Id:       1,
+			Name:     "Foonius Barius",
+			Type:     "Type 1",
+			Amount:   100,
+			Currency: "USD",
+		}
 	}
 
 	htmlText, err := GlobalWrapper.GetSafeHtml(path, data)

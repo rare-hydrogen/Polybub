@@ -45,6 +45,20 @@ func ReadManyFooBar() ([]Models.FooBar, error) {
 	return many, nil
 }
 
+func ReadLatestFooBar() (Models.FooBar, error) {
+	var db = Data.GetConnection()
+
+	single := Models.FooBar{}
+	err := db.Model(&Models.FooBar{}).
+		Last(&single).
+		Error
+	if err != nil {
+		return Models.FooBar{}, err
+	}
+
+	return single, nil
+}
+
 func UpdateFooBar(data Models.FooBar) (Models.FooBar, error) {
 	var db = Data.GetConnection()
 

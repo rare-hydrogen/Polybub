@@ -2,6 +2,7 @@ package Pages
 
 import (
 	"Polybub/Auth/OAuth2"
+	"Polybub/Routes/Ui/Pages/CreateUser"
 	"Polybub/Routes/Ui/Pages/Dashboard"
 	"Polybub/Routes/Ui/Pages/ForgotPassword"
 	"Polybub/Routes/Ui/Pages/Login"
@@ -17,4 +18,5 @@ func AddPageRoutes(mux *http.ServeMux) {
 	OAuth2.JwtPermit(mux, "/setup-mfa", SetupMfa.Handler, Permissions.MFA_CODE_CRU, nil)
 	OAuth2.JwtPermit(mux, "/validate-mfa", ValidateMfa.Handler, Permissions.MFA_CODE_R, nil)
 	OAuth2.JwtPermit(mux, "/dashboard", Dashboard.Handler, Permissions.DASHBOARD_R, nil)
+	OAuth2.JwtPermit(mux, "/create-user", CreateUser.Handler, Permissions.DASHBOARD_R, nil) // Fix perms
 }
