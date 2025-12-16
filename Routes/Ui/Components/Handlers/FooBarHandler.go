@@ -1,4 +1,4 @@
-package FooBar
+package Handlers
 
 import (
 	"Polybub/Data/Models"
@@ -12,19 +12,19 @@ import (
 	"net/http"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
-		get(w, req)
+		getFooBar(w, req)
 	case "POST":
-		post(w, req)
+		postFooBar(w, req)
 	default:
 		Jsend.Error(w, "not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func get(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Components/FooBar/foobar.html"
+func getFooBar(w http.ResponseWriter, req *http.Request) {
+	path := "Routes/Ui/Components/Templates/foobar.html"
 	data, err := Services.ReadLatestFooBar()
 	if err != nil {
 		data = Models.FooBar{
@@ -44,7 +44,7 @@ func get(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, htmlText)
 }
 
-func post(w http.ResponseWriter, req *http.Request) {
+func postFooBar(w http.ResponseWriter, req *http.Request) {
 	buf, err := io.ReadAll(req.Body)
 	if err != nil {
 		Jsend.Error(w, "Something went wrong!", http.StatusInternalServerError)

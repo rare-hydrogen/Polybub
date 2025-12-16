@@ -1,4 +1,4 @@
-package LoginApi
+package Handlers
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -9,19 +9,19 @@ import (
 	"net/http"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func LoginHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
-		login(w, req)
+		postLogin(w, req)
 	case http.MethodDelete:
-		logout(w, req)
+		deleteLogout(w, req)
 	default:
 		Jsend.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
 
-func login(w http.ResponseWriter, req *http.Request) {
+func postLogin(w http.ResponseWriter, req *http.Request) {
 	username := req.Header.Get("Username")
 	password := req.Header.Get("Password")
 
@@ -49,6 +49,6 @@ func login(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func logout(w http.ResponseWriter, req *http.Request) {
+func deleteLogout(w http.ResponseWriter, req *http.Request) {
 	OAuth2.DeleteTokenAndRedirect(w, "login")
 }

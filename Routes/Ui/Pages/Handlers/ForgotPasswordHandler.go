@@ -1,4 +1,4 @@
-package ForgotPassword
+package Handlers
 
 import (
 	"Polybub/Jsend"
@@ -7,20 +7,20 @@ import (
 	"net/http"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		if req.URL.Query().Has("confirm") {
-			getConfirm(w, req)
+			getForgotPasswordConfirm(w, req)
 		} else if req.URL.Query().Has("key") {
-			getAttempt(w, req)
+			getForgotPasswordAttempt(w, req)
 		} else {
-			get(w, req)
+			getForgotPassword(w, req)
 		}
 	}
 }
 
-func get(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/ForgotPassword/forgot-password.html"
+func getForgotPassword(w http.ResponseWriter, req *http.Request) {
+	path := "Routes/Ui/Pages/Templates/forgot-password.html"
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
@@ -37,8 +37,8 @@ func get(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, wrappedBody)
 }
 
-func getConfirm(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/ForgotPassword/forgot-password-confirm.html"
+func getForgotPasswordConfirm(w http.ResponseWriter, req *http.Request) {
+	path := "Routes/Ui/Pages/Templates/forgot-password-confirm.html"
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
@@ -55,8 +55,8 @@ func getConfirm(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, wrappedBody)
 }
 
-func getAttempt(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/ForgotPassword/forgot-password-attempt.html"
+func getForgotPasswordAttempt(w http.ResponseWriter, req *http.Request) {
+	path := "Routes/Ui/Pages/Templates/forgot-password-attempt.html"
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {

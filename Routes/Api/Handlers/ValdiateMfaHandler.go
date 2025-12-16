@@ -1,4 +1,4 @@
-package ValidateMfaApi
+package Handlers
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -8,19 +8,19 @@ import (
 	"net/http"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func ValdiateMfaHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
-		post(w, req)
+		postValdiateMfa(w, req)
 	case http.MethodPut:
-		put(w, req)
+		putValdiateMfa(w, req)
 	default:
 		Jsend.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
 
-func post(w http.ResponseWriter, req *http.Request) {
+func postValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_R, nil)
 	if err != nil {
 		Jsend.Error(w, err.Error(), status)
@@ -51,7 +51,7 @@ func post(w http.ResponseWriter, req *http.Request) {
 	OAuth2.StoreTokenAndRedirect(w, tokenString, "dashboard")
 }
 
-func put(w http.ResponseWriter, req *http.Request) {
+func putValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_CRU, nil)
 	if err != nil {
 		Jsend.Error(w, err.Error(), status)

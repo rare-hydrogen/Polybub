@@ -1,4 +1,4 @@
-package FoobarApi
+package Handlers
 
 import (
 	"Polybub/Data/Models"
@@ -9,24 +9,24 @@ import (
 	"strconv"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodGet:
 		if req.URL.Query().Has("id") {
-			getSingle(w, req)
+			getSingleFooBar(w, req)
 		} else {
-			getMany(w, req)
+			getManyFooBar(w, req)
 		}
 	case http.MethodPost:
-		post(w, req)
+		postFooBar(w, req)
 	case http.MethodPatch:
-		patch(w, req)
+		patchFooBar(w, req)
 	case http.MethodDelete:
-		delete(w, req)
+		deleteFooBar(w, req)
 	}
 }
 
-func getSingle(w http.ResponseWriter, req *http.Request) {
+func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
 		Jsend.Error(w, err.Error())
@@ -42,7 +42,7 @@ func getSingle(w http.ResponseWriter, req *http.Request) {
 	Jsend.Success(w, d)
 }
 
-func getMany(w http.ResponseWriter, req *http.Request) {
+func getManyFooBar(w http.ResponseWriter, req *http.Request) {
 	d, err := Services.ReadManyFooBar()
 	if err != nil {
 		Jsend.Error(w, err.Error())
@@ -52,7 +52,7 @@ func getMany(w http.ResponseWriter, req *http.Request) {
 	Jsend.Success(w, d)
 }
 
-func post(w http.ResponseWriter, req *http.Request) {
+func postFooBar(w http.ResponseWriter, req *http.Request) {
 	var dto Models.FooBar
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
@@ -70,7 +70,7 @@ func post(w http.ResponseWriter, req *http.Request) {
 	Jsend.Success(w, d)
 }
 
-func patch(w http.ResponseWriter, req *http.Request) {
+func patchFooBar(w http.ResponseWriter, req *http.Request) {
 	var dto Models.FooBar
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
@@ -88,7 +88,7 @@ func patch(w http.ResponseWriter, req *http.Request) {
 	Jsend.Success(w, d)
 }
 
-func delete(w http.ResponseWriter, req *http.Request) {
+func deleteFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
 		Jsend.Error(w, err.Error())

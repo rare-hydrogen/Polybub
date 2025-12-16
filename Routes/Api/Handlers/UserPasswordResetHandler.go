@@ -1,4 +1,4 @@
-package UserPasswordResetApi
+package Handlers
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -9,19 +9,19 @@ import (
 	"strconv"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func UserPasswordResetHandler(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
-		requestReset(w, req)
+		postUserPasswordReset(w, req)
 	case http.MethodPut:
-		attemptReset(w, req)
+		putUserPasswordReset(w, req)
 	default:
 		Jsend.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
 
-func requestReset(w http.ResponseWriter, req *http.Request) {
+func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	givenEmail := req.Header.Get("email")
 	if givenEmail == "" {
 		Jsend.Error(w, "Invalid email.", http.StatusBadRequest)
@@ -41,7 +41,7 @@ func requestReset(w http.ResponseWriter, req *http.Request) {
 	OAuth2.DeleteTokenAndRedirect(w, "/forgot-password?confirm")
 }
 
-func attemptReset(w http.ResponseWriter, req *http.Request) {
+func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	queryId := req.Header.Get("id")
 	givenUserId, err := strconv.Atoi(queryId)
 	if err != nil {

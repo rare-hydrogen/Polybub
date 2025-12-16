@@ -1,4 +1,4 @@
-package CreateUser
+package Handlers
 
 import (
 	"Polybub/Data/Models"
@@ -10,17 +10,17 @@ import (
 	"net/http"
 )
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func CreateUserHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
-		get(w, req)
+		getCreateUser(w, req)
 	}
 	if req.Method == "POST" {
-		post(w, req)
+		postCreateUser(w, req)
 	}
 }
 
-func get(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/CreateUser/create-user.html"
+func getCreateUser(w http.ResponseWriter, req *http.Request) {
+	path := "Routes/Ui/Pages/Templates/create-user.html"
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
@@ -37,7 +37,7 @@ func get(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, wrappedBody)
 }
 
-func post(w http.ResponseWriter, req *http.Request) {
+func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	var dto Models.User
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
