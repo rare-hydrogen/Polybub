@@ -1,0 +1,13 @@
+[Unit]
+Description=Polybub HTTP Server
+After=network.target
+
+[Service]
+User=github_agent
+WorkingDirectory=/var/www/app/Polybub
+ExecStart=/var/www/app/Polybub/Polybub
+#Restart=always
+#RestartSec=30
+
+#[Install]
+#WantedBy=multi-user.target
