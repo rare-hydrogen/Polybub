@@ -15,6 +15,12 @@
 </head>
 
 <body>
+  <div class="container level-right">
+    <a class="level-item" href="/dashboard">Dashboard</a>
+    <a class="level-item" href="/setup-mfa">Setup MFA</a>
+    <a class="level-item" href="/create-user">Create User</a>
+    <button class="level-item" hx-delete="/api/user-login">Logout</button>
+  </div>
   {{.Body}}
 </body>
 

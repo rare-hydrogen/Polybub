@@ -28,7 +28,7 @@ func getForgotPassword(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
+	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
 		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
 		return
@@ -46,7 +46,7 @@ func getForgotPasswordConfirm(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
+	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
 		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
 		return
@@ -64,7 +64,7 @@ func getForgotPasswordAttempt(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
+	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
 		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
 		return

@@ -27,6 +27,24 @@ func GetSafeHtml(filePath string, data any) (string, error) {
 }
 
 func GetWrappedTemplate(safeHtml string) (string, error) {
+	wrapPath := "Routes/Ui/Wrappers/GlobalWrapper/private.html"
+	wrap, err := template.ParseFiles(wrapPath)
+	if err != nil {
+		return "", err
+	}
+
+	variant := globalWrapperVariant{
+		Title: Utilities.GlobalConfig.Domain,
+		Body:  template.HTML(safeHtml),
+	}
+
+	buf := new(bytes.Buffer)
+	wrap.Execute(buf, variant)
+
+	return buf.String(), nil
+}
+
+func GetPublicTemplate(safeHtml string) (string, error) {
 	wrapPath := "Routes/Ui/Wrappers/GlobalWrapper/global.html"
 	wrap, err := template.ParseFiles(wrapPath)
 	if err != nil {

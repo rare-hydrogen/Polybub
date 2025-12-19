@@ -1,54 +1,31 @@
 <body>
-  <div>
-  <p>Create User</p>
-  </div>
-  <form hx-post="/create-user" hx-ext="json-enc" hx-swap="none">
+  <article class="container bd-tw">
+    <div class="content">
+      <h2>Create User</h2>
+      <p>Not every user has permissions to use this form.</p>
+    </div>
+    <form hx-post="/create-user" hx-ext="json-enc" hx-swap="none">
       <div class="field" style="max-width: 50%">
-        <input
-          type="text"
-          name="FirstName"
-          value=""
-          placeholder="First Name"
-          class="input"
-        />
-        <input
-          type="text"
-          name="LastName"
-          value=""
-          placeholder="Last Name"
-          class="input"
-        />
-        <input
-          type="text"
-          name="Username"
-          value=""
-          placeholder="Username"
-          class="input"
-        />
-        <input
-          type="text"
-          name="Password"
-          value=""
-          placeholder="Password"
-          class="input"
-        />
-        <input
-          type="text"
-          name="AccountEmail"
-          value=""
-          placeholder="Account Email"
-          class="input"
-        />
-        <input
-          type="text"
-          name="AccountPhone"
-          value=""
-          placeholder="Account Phone"
-          class="input"
-        />
+        <input type="text" name="FirstName" value="" placeholder="First Name" class="input" />
+        <input type="text" name="LastName" value="" placeholder="Last Name" class="input" />
+        <input type="text" name="Username" value="" placeholder="Username" class="input" />
+        <input type="text" name="Password" value="" placeholder="Password" class="input" />
+        <input type="text" name="AccountEmail" value="" placeholder="Account Email" class="input" />
+        <input type="text" name="AccountPhone" value="" placeholder="Account Phone" class="input" />
         <input type="submit" class="is-primary button" />
       </div>
     </form>
     </div>
-  </section>
+  </article>
 </body>
+
+<style>
+  .bd-tw {
+    background-color: var(--bulma-scheme-main-bis);
+    border-radius: var(--bulma-radius-large);
+    flex-shrink: 0;
+    font-size: 1em;
+    padding: 1.25em;
+    text-align: left;
+  }
+</style>

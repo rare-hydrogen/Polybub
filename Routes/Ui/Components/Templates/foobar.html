@@ -1,48 +1,49 @@
 <div class="content">
-  <h1>Create a FooBar</h1>
-  <p>
-    FooBar is the name of a fake object. When you make one, it will appear at
-    the bottom of the page. If other people make FooBars too, you'll see them
-    below instead.
-  </p>
-  <p>This demonstrates data input and retrieval.</p>
-  <form hx-post="/create-user" hx-ext="json-enc" hx-swap="none">
-    <div class="field" style="max-width: 50%">
-      <input
-        type="text"
-        name="Name"
-        value=""
-        placeholder="Name"
-        class="input"
-      />
-      <input
-        type="text"
-        name="Type"
-        value=""
-        placeholder="Type"
-        class="input"
-      />
-      <input
-        type="number"
-        name="amount"
-        value=""
-        step=".01"
-        placeholder="Amount"
-        class="input"
-      />
-      <input type="submit" class="is-primary button" />
+  <article class="bd-tw">
+    <h1>Create a FooBar</h1>
+    <p>
+      Try creating some dummy data (a FooBar). If other people make FooBars too, you'll see them
+      below instead.
+    </p>
+    <p>This demonstrates data input and retrieval.</p>
+    <form hx-post="/create-user" hx-ext="json-enc" hx-swap="none">
+      <div class="field" style="max-width: 50%">
+        <input type="text" name="Name" value="" placeholder="Name" class="input" />
+        <input type="text" name="Type" value="" placeholder="Type" class="input" />
+        <input type="number" name="amount" value="" step=".01" placeholder="Amount" class="input" />
+        <input type="submit" class="is-primary button" />
+      </div>
+    </form>
+  </article>
+  <br />
+  <br />
+  <article class="bd-tw">
+    <div>
+      <h2>Latest FooBar</h2>
+      <p>Click Refresh to see the latest FooBar:</p>
+      <ul>
+        <li>Name: <span class="cool">{{.Name}}</span></li>
+        <li>Type: <span class="cool">{{.Type}}</span></li>
+        <li>Amount: <span class="cool">{{ (moneyDisplay .Amount .Currency) }}</span></li>
+        <li>CreatedBy: <span class="cool">{{.CreatedBy}}</span></li>
+      </ul>
+      <a href="./dashboard" class="is-secondary button">Refresh</a>
     </div>
-  </form>
-  <br />
-  <br />
-  <div>
-    <h2>Latest FooBar</h2>
-    <p>What was the last created FooBar? Refresh to see:</p>
-    <ul>
-      <li>Name = {{.Name}}</li>
-      <li>Type = {{.Type}}</li>
-      <li>Amount = {{ (moneyDisplay .Amount .Currency) }}</li>
-    </ul>
-    <a href="./dashboard" class="is-secondary button">Refresh</a>
-  </div>
+  </article>
 </div>
+
+<style>
+  .bd-tw {
+    background-color: var(--bulma-scheme-main-bis);
+    border-radius: var(--bulma-radius-large);
+    flex-shrink: 0;
+    font-size: 1em;
+    padding: 1.25em;
+    text-align: left;
+  }
+
+  .cool {
+    color: var(--bulma-primary);
+    font-style: italic;
+  }
+</style>
