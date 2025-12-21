@@ -7,7 +7,7 @@ CREATE TABLE Users (
     Username TEXT NOT NULL UNIQUE,
 	Password TEXT NOT NULL,
 	Salt TEXT NOT NULL,
-	AccountEmail TEXT NOT NULL,
+	AccountEmail TEXT NOT NULL UNIQUE,
 	AccountPhone TEXT NOT NULL,
 	UserGroup INTEGER NOT NULL,
 	TotpKey TEXT NOT NULL,

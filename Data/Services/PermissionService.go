@@ -1,6 +1,7 @@
 package Services
 
 import (
+	"Polybub/Auth/OAuth2"
 	"Polybub/Data"
 	"Polybub/Data/Models"
 )
@@ -16,6 +17,29 @@ func CreatePermission(data Models.Permission) (Models.Permission, error) {
 	}
 
 	return data, nil
+}
+
+func CreateDefaultPermissions(userId int32) error {
+	defaultPermissions := []Models.Permission{
+		OAuth2.NewPerm("MfaCode", true, true, true, false),
+		OAuth2.NewPerm("Dashboard", true, false, false, false),
+		OAuth2.NewPerm("FooBars", true, true, true, true),
+	}
+
+	for i := 0; i < len(defaultPermissions); i++ {
+		defaultPermissions[i].UserId = userId
+	}
+
+	var db = Data.GetConnection()
+
+	err := db.Model(&[]Models.Permission{}).
+		Save(defaultPermissions).
+		Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func ReadSinglePermission(id int32) (Models.Permission, error) {

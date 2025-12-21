@@ -1,14 +1,21 @@
 package Handlers
 
 import (
+	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
+	"Polybub/Utilities/Permissions"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
+
+type checkPasswordVariant struct {
+	Models.User
+	CheckPassword string
+}
 
 func CreateUserHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
@@ -38,21 +45,42 @@ func getCreateUser(w http.ResponseWriter, req *http.Request) {
 }
 
 func postCreateUser(w http.ResponseWriter, req *http.Request) {
-	var dto Models.User
+	status, err := OAuth2.JwtPermitRequest(req, Permissions.USERS_CRUD, nil)
+	if err != nil {
+		Jsend.Error(w, err.Error(), status)
+		return
+	}
+
+	var dto checkPasswordVariant
 	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&dto)
+	err = decoder.Decode(&dto)
 	if err != nil {
 		Jsend.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	d, err := Services.CreateUser(dto)
-	if err != nil {
-		Jsend.Error(w, err.Error())
+	if dto.Password != dto.CheckPassword {
+		Jsend.Error(w, "passwords must match", http.StatusBadRequest)
 		return
 	}
 
-	Services.UpdatePasswordAndSalt(d.Id, dto.Password)
+	d, err := Services.CreateUser(dto.User)
+	if err != nil {
+		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = Services.CreateDefaultPermissions(d.Id)
+	if err != nil {
+		Jsend.Error(w, "adding default permissions failed", http.StatusInternalServerError)
+		return
+	}
+
+	err = Services.UpdatePasswordAndSalt(d.Id, dto.Password)
+	if err != nil {
+		Jsend.Error(w, "invalid password", http.StatusBadRequest)
+		return
+	}
 
 	Jsend.Success(w, d)
 }

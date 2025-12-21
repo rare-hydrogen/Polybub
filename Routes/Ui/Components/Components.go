@@ -8,5 +8,5 @@ import (
 )
 
 func AddComponentRoutes(mux *http.ServeMux) {
-	OAuth2.JwtPermit(mux, "/comp/foobar", Handlers.FooBarHandler, Permissions.DASHBOARD_R, nil)
+	OAuth2.JwtPermit(mux, "/comp/foobar", Handlers.FooBarHandler, Permissions.FOOBARS_CRUD, nil)
 }
