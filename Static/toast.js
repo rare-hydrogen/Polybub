@@ -13,7 +13,7 @@ function PopToast(message, classes) {
 
   setTimeout(() => {
     notif.remove();
-  }, 1800);
+  }, 3600);
 }
 
 // If a field throws an error, highlight the field

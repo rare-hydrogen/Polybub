@@ -4,6 +4,7 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
+	"Polybub/Data/Validators"
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"Polybub/Utilities/Permissions"
@@ -13,7 +14,7 @@ import (
 )
 
 type checkPasswordVariant struct {
-	Models.User
+	Models.User   // TODO: Nesting objects like this prevent validation rules from firing
 	CheckPassword string
 }
 
@@ -54,6 +55,12 @@ func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	var dto checkPasswordVariant
 	decoder := json.NewDecoder(req.Body)
 	err = decoder.Decode(&dto)
+	if err != nil {
+		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = Validators.User(dto.User)
 	if err != nil {
 		Jsend.Error(w, err.Error(), http.StatusBadRequest)
 		return
