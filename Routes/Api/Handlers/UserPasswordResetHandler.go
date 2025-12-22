@@ -31,7 +31,7 @@ func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	userId, err := Services.GetIdByEmail(givenEmail)
 	if err == nil {
 		// If there is a real user:
-		err2 := Services.AddResetKeyThenDeleteOthers(userId)
+		err2 := Services.AddResetKeyThenDeleteOthers(userId, givenEmail)
 		if err2 != nil {
 			// We don't show errors to avoid giving away user identities
 		}
