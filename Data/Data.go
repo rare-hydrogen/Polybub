@@ -27,7 +27,11 @@ func GetConnection() *gorm.DB {
 
 	Callbacks.SetCallbacks(db)
 
-	db.Exec("PRAGMA foreign_keys = ON")
+	db.Exec(`pragma journal_mode = wal;
+		pragma synchronous = normal;
+		pragma temp_store = memory;
+		pragma busy_timeout = 500;	
+		pragma foreign_keys = on;`)
 
 	return db
 }
