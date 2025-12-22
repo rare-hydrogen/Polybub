@@ -22,7 +22,7 @@ func GetConnection() *gorm.DB {
 
 	db, err := gorm.Open(sqlite.Open(Utilities.GlobalConfig.Connection), gormConfig)
 	if err != nil {
-		panic("failed to connect to database")
+		panic(err.Error())
 	}
 
 	Callbacks.SetCallbacks(db)
