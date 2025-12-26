@@ -45,3 +45,7 @@ sudo systemctl daemon-reload
 
 # Enable agent to use sudo systmctl
 echo 'github_agent ALL=(root) NOPASSWD: /bin/systemctl restart polybub.service' | sudo tee /etc/sudoers.d/polybub-deploy
+
+# Add and Enable CGO for golang's sqlite3
+go env -w CGO_ENABLED=1
+apt-get install build-essential
