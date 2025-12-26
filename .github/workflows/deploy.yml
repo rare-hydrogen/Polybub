@@ -19,7 +19,6 @@ jobs:
 
       - name: Deploy over SSH
         run: |
-          git config --global --add safe.directory /var/www/app/Polybub
           ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'bash /var/www/app/Polybub/.github/workflows/deploy/script.bash'
 
       - name: Clean up SSH

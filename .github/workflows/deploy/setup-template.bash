@@ -48,4 +48,8 @@ echo 'github_agent ALL=(root) NOPASSWD: /bin/systemctl restart polybub.service' 
 
 # Add and Enable CGO for golang's sqlite3
 go env -w CGO_ENABLED=1
-apt-get install build-essential
+sudo apt-get install build-essential
+
+# Enable the agent (and by extension, systemctl) to access the private.pem
+sudo chown github_agent:github_agent /var/www/app/Polybub/Certs/private.pem
+sudo chown github_agent:github_agent /var/www/app/Polybub/Certs
