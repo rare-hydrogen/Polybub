@@ -13,7 +13,7 @@ type User struct {
 	Salt         string `gorm:"column:Salt;type:TEXT" json:"Salt"`
 	AccountEmail string `gorm:"column:AccountEmail;type:TEXT" json:"AccountEmail"`
 	AccountPhone string `gorm:"column:AccountPhone;type:TEXT" json:"AccountPhone"`
-	UserGroup    int32  `gorm:"column:UserGroup;type:INTEGER" json:"UserGroup"`
+	UserGroup    int32  `gorm:"column:UserGroup;type:INTEGER" json:"UserGroup,string"`
 	TotpKey      string `gorm:"column:TotpKey;type:TEXT" json:"TotpKey"`
 	Audit.AuditFields
 }

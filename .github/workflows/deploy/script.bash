@@ -4,7 +4,7 @@
 # This script is run by the agent to update the deployed app.
 
 # Stop the application if it is running
-sudo systemctl stop polybub.service
+pkill Polybub
 
 # Navigate to this repo
 cd /var/www/app/Polybub

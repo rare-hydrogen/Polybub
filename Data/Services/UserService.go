@@ -3,6 +3,7 @@ package Services
 import (
 	"Polybub/Data"
 	"Polybub/Data/Audit"
+	"Polybub/Data/Enums/UserGroups"
 	"Polybub/Data/Models"
 )
 
@@ -37,7 +38,7 @@ func CreateUser(data Models.User) (userVariant, error) {
 	data.Id = 0
 	data.Password = ""
 	data.Salt = ""
-	data.UserGroup = 1 // Remove to allow multiple UserGroups
+	data.UserGroup = UserGroups.InternalUsers // Remove to allow multiple UserGroups
 
 	err := db.Model(&Models.User{}).
 		Save(&data).
