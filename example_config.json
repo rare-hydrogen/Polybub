@@ -9,8 +9,8 @@
     "isSecure": true,
     "apiTitle": "asdf",
     "apiVersion": "1.0.0",
-    "smtpAddress": "asdf",
-    "smtpPassword": "asdf",
-    "smtpHost": "asdf",
-    "smtpPort": "asdf"
+    "sendgridName": "foobar",
+    "sendgridEmail": "foobar@asdf.com",
+    "sendgridKey": "key"
+
 }
