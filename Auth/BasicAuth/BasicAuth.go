@@ -5,13 +5,14 @@ import (
 	"net/http"
 )
 
-func BasicAuth(
-	handler http.HandlerFunc, username string, password string) http.HandlerFunc {
+func BasicAuth(handler http.HandlerFunc, username string, password string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		realm := "Basic Auth credentials required."
 
+		// Validate
 		user, pass, ok := r.BasicAuth()
 
+		// If validation fails, block them
 		if !ok || subtle.ConstantTimeCompare([]byte(user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(pass), []byte(password)) != 1 {
 			w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
 			w.WriteHeader(401)

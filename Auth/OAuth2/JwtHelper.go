@@ -12,6 +12,7 @@ import (
 )
 
 func GetTokenStringFromHeader(req *http.Request) (string, error) {
+	// Get the token string from the cookie
 	tokenString, err := req.Cookie(Utilities.GlobalConfig.CookieName)
 	if err != nil {
 		return "", errors.New("cookie error detected")
@@ -24,17 +25,20 @@ func GetTokenStringFromHeader(req *http.Request) (string, error) {
 }
 
 func GetClaimsFromTokenString(tokenString string) (Claims, error) {
+	// Get the jwt object from the token string
 	jwtObj, err := ParseJwt(tokenString)
 	if err != nil {
 		return Claims{}, err
 	}
 
+	// Turn the compressed claims from the jwt into claims we can use
 	claims := jwtObj.Claims.(jwt.MapClaims)
 	permissions, err := DecompressPermsFromClaims(claims)
 	if err != nil {
 		return Claims{}, err
 	}
 
+	// Map the values from the claims to a custom claims object with decompressed perms
 	var c Claims
 	c.Name = claims["nme"].(string)
 	c.Issuer = claims["iss"].(string)
@@ -51,6 +55,7 @@ func GetClaimsFromTokenString(tokenString string) (Claims, error) {
 func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page string) {
 	redirectURL := Utilities.GetBaseUrl(Utilities.GlobalConfig) + "/" + page
 
+	// Make the cookie and put it in the user's browser
 	cookie := &http.Cookie{
 		Name:     Utilities.GlobalConfig.CookieName,
 		Value:    tokenString,
@@ -63,6 +68,7 @@ func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page strin
 	}
 	http.SetCookie(w, cookie)
 
+	// Redirect to wherever the user was actually supposed to go
 	js := `<script>window.location.href = '` + redirectURL + `';</script>`
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprint(w, js)
@@ -71,6 +77,7 @@ func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page strin
 func DeleteTokenAndRedirect(w http.ResponseWriter, page string) {
 	redirectURL := Utilities.GetBaseUrl(Utilities.GlobalConfig) + "/" + page
 
+	// Make a bad cookie to overwrite the user's
 	cookie := &http.Cookie{
 		Name:     Utilities.GlobalConfig.CookieName,
 		Value:    "",
@@ -83,6 +90,7 @@ func DeleteTokenAndRedirect(w http.ResponseWriter, page string) {
 	}
 	http.SetCookie(w, cookie)
 
+	// Redirect to wherever the user was actually supposed to go
 	js := `<script>window.location.href = '` + redirectURL + `';</script>`
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprint(w, js)

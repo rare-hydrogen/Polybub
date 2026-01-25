@@ -1,13 +1,5 @@
 package Totp
 
-// 1. User logs in
-// 2. User opens setup-mfa page
-// 3. Backend generates key, saves it encrypted in db
-// 4. Backend sends key + QR code to frontend
-// 5. Frontend requests validation code from user
-// 6. On successful validation, enable TOTP for that user
-// 7. Until successful validation, disable TOTP for that user
-
 import (
 	"Polybub/Data/Models"
 	"Polybub/Utilities"
@@ -45,7 +37,7 @@ func BeginTotp(user Models.User) (bytes.Buffer, string, error) {
 	}
 	png.Encode(&buf, img)
 
-	// display the QR code to the user.
+	// Display the QR code to the user.
 	return buf, key.Secret(), err
 }
 

@@ -2,7 +2,9 @@ package TestHelpers
 
 import (
 	"Polybub/Data"
+	"Polybub/Jsend"
 	"Polybub/Utilities"
+	"net/http"
 	"os"
 	"strings"
 
@@ -51,4 +53,8 @@ func ApplySchema() {
 	if err != nil {
 		panic("failed to apply schema")
 	}
+}
+
+func TestHandler(w http.ResponseWriter, req *http.Request) {
+	Jsend.Success(w, nil, http.StatusOK)
 }
