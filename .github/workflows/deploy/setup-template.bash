@@ -38,6 +38,7 @@ sudo snap install go --channel=1.25/stable --classic
 
 # Add directories for repo
 sudo mkdir -p /var/www/App
+sudo chown github_agent:github_agent /var/www/app/Polybub -R
 
 # Add service to systemctl
 cp /var/www/app/Polybub/.github/workflows/deploy/polybub.service /etc/systemd/system/polybub.service
