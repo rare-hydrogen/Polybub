@@ -3,7 +3,7 @@ package Handlers
 import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Services"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Utilities/Permissions"
 	"net/http"
 )

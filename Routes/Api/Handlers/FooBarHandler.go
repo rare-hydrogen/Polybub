@@ -3,7 +3,7 @@ package Handlers
 import (
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"encoding/json"
 	"net/http"
 	"strconv"

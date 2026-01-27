@@ -1,7 +1,7 @@
 package Handlers
 
 import (
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )

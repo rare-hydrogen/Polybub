@@ -2,7 +2,7 @@ package TestHelpers
 
 import (
 	"Polybub/Data"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Utilities"
 	"net/http"
 	"os"

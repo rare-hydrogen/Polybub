@@ -4,7 +4,7 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Services"
 	"Polybub/Data/Validators"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"net/http"
 	"strconv"
 )

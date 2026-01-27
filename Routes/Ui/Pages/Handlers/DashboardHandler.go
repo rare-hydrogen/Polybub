@@ -2,7 +2,7 @@ package Handlers
 
 import (
 	"Polybub/Auth/OAuth2"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )

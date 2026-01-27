@@ -4,7 +4,7 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Utilities/Permissions"
 	"net/http"
 )

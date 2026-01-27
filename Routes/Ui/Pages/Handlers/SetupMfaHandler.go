@@ -4,7 +4,7 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Auth/Totp"
 	"Polybub/Data/Services"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"encoding/base64"
 	"html/template"

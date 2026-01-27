@@ -5,7 +5,7 @@ import (
 	"Polybub/Data/Models"
 	"Polybub/Data/Services"
 	"Polybub/Data/Validators"
-	"Polybub/Jsend"
+	"Polybub/Routes/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"Polybub/Utilities/Permissions"
 	"encoding/json"
