@@ -7,7 +7,6 @@ import (
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"encoding/base64"
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -60,39 +59,39 @@ func getVariantMfaData(req *http.Request) (variantMfaData, error) {
 func getSetupMfa(w http.ResponseWriter, req *http.Request) {
 	v, err := getVariantMfaData(req)
 	if err != nil {
-		Jsend.Error(w, "Error reading cookies", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "Error reading cookies", http.StatusBadRequest)
 		return
 	}
 
 	path := "Routes/Ui/Pages/Templates/setup-mfa.html"
 	body, err := GlobalWrapper.GetSafeHtml(path, v)
 	if err != nil {
-		Jsend.Error(w, "Error reading template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
 	}
 
 	parsedHtml, err := GlobalWrapper.GetWrappedTemplate(body)
 	if err != nil {
-		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, parsedHtml)
+	Jsend.Ui(req.Context(), w, parsedHtml)
 }
 
 func getSetupMfaForm(w http.ResponseWriter, req *http.Request) {
 	v, err := getVariantMfaData(req)
 	if err != nil {
-		Jsend.Error(w, "Error reading cookies", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "Error reading cookies", http.StatusBadRequest)
 		return
 	}
 
 	path := "Routes/Ui/Pages/Templates/send-code-to-check.html"
 	body, err := GlobalWrapper.GetSafeHtml(path, v)
 	if err != nil {
-		Jsend.Error(w, "Error reading template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, body)
+	Jsend.Ui(req.Context(), w, body)
 }

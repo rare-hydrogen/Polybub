@@ -8,6 +8,7 @@ import (
 	"Polybub/Routes"
 	"Polybub/Swagger"
 	"Polybub/Utilities"
+	"Polybub/Utilities/Logger/RequestMiddleware"
 )
 
 func main() {
@@ -23,7 +24,8 @@ func main() {
 	})
 
 	mux := Routes.AddRoutes()
-	handler := corsHandler.Handler(mux)
+	log := RequestMiddleware.LogHandler(mux)
+	handler := corsHandler.Handler(log)
 
 	if Utilities.GlobalConfig.Env == "development" {
 		Swagger.Setup(Utilities.GlobalConfig, baseUrl, mux)

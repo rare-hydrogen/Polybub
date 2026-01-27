@@ -4,7 +4,6 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
-	"fmt"
 	"net/http"
 )
 
@@ -23,13 +22,13 @@ func getDashboard(w http.ResponseWriter, req *http.Request) {
 	path := "Routes/Ui/Pages/Templates/dashboard.html"
 	tokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
-		Jsend.Error(w, "Error reading token", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading token", http.StatusInternalServerError)
 		return
 	}
 
 	claims, err := OAuth2.GetClaimsFromTokenString(tokenString)
 	if err != nil {
-		Jsend.Error(w, "Error reading token", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading token", http.StatusInternalServerError)
 		return
 	}
 
@@ -39,15 +38,15 @@ func getDashboard(w http.ResponseWriter, req *http.Request) {
 
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
-		Jsend.Error(w, "Error reading template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
 	if err != nil {
-		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, wrappedBody)
+	Jsend.Ui(req.Context(), w, wrappedBody)
 }

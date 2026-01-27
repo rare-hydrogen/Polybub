@@ -16,7 +16,7 @@ func LoginHandler(w http.ResponseWriter, req *http.Request) {
 	case http.MethodDelete:
 		deleteLogout(w, req)
 	default:
-		Jsend.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		Jsend.Error(req.Context(), w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
@@ -27,7 +27,7 @@ func postLogin(w http.ResponseWriter, req *http.Request) {
 
 	user, jwtString, err := Services.Login(username, password)
 	if err != nil {
-		Jsend.Error(w, "login failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "login failed", http.StatusBadRequest)
 		return
 	}
 
@@ -42,13 +42,13 @@ func postLogin(w http.ResponseWriter, req *http.Request) {
 		permissions := []Models.Permission{Permissions.MFA_CODE_R}
 		mfaJwtString, err := OAuth2.NewJwt(name, user.Id, user.UserGroup, permissions)
 		if err != nil {
-			Jsend.Error(w, "mfa validation failed", http.StatusBadRequest)
+			Jsend.Error(req.Context(), w, "mfa validation failed", http.StatusBadRequest)
 			return
 		}
 		OAuth2.StoreTokenAndRedirect(w, mfaJwtString, "validate-mfa")
 	}
 }
 
-func deleteLogout(w http.ResponseWriter, req *http.Request) {
+func deleteLogout(w http.ResponseWriter, _ *http.Request) {
 	OAuth2.DeleteTokenAndRedirect(w, "login")
 }

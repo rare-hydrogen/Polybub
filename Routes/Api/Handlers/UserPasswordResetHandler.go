@@ -16,7 +16,7 @@ func UserPasswordResetHandler(w http.ResponseWriter, req *http.Request) {
 	case http.MethodPut:
 		putUserPasswordReset(w, req)
 	default:
-		Jsend.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		Jsend.Error(req.Context(), w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
@@ -24,7 +24,7 @@ func UserPasswordResetHandler(w http.ResponseWriter, req *http.Request) {
 func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	givenEmail := req.Header.Get("email")
 	if givenEmail == "" {
-		Jsend.Error(w, "Invalid email.", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "Invalid email.", http.StatusBadRequest)
 		return
 	}
 
@@ -37,7 +37,7 @@ func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	Jsend.Success(w, nil)
+	Jsend.Success(req.Context(), w, nil)
 	OAuth2.DeleteTokenAndRedirect(w, "/forgot-password?confirm")
 }
 
@@ -45,7 +45,7 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	queryId := req.Header.Get("id")
 	givenUserId, err := strconv.Atoi(queryId)
 	if err != nil {
-		Jsend.Error(w, "Invalid request.", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "Invalid request.", http.StatusBadRequest)
 		return
 	}
 
@@ -55,33 +55,33 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 
 	err = Validators.UserPassword(newPassword, checkPassword)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	actualKey, err := Services.GetResetKey(int32(givenUserId))
 	if err != nil {
-		Jsend.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
 
 	if givenKey != actualKey {
-		Jsend.Error(w, "Invalid or expired key.", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "Invalid or expired key.", http.StatusBadRequest)
 		return
 	}
 
 	err = Services.DeleteAllResetKeys(int32(givenUserId))
 	if err != nil {
-		Jsend.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
 
 	err = Services.UpdatePasswordAndSalt(int32(givenUserId), newPassword)
 	if err != nil {
-		Jsend.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
 
-	Jsend.Success(w, nil)
+	Jsend.Success(req.Context(), w, nil)
 	OAuth2.DeleteTokenAndRedirect(w, "/login")
 }

@@ -9,7 +9,6 @@ import (
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"Polybub/Utilities/Permissions"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -32,23 +31,24 @@ func getCreateUser(w http.ResponseWriter, req *http.Request) {
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
-		Jsend.Error(w, "Error reading template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
 	if err != nil {
-		Jsend.Error(w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, wrappedBody)
+	//Jsend.Ui(req.Context(), w, wrappedBody)
+	Jsend.Ui(req.Context(), w, wrappedBody, http.StatusOK)
 }
 
 func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.USERS_CRUD, nil)
 	if err != nil {
-		Jsend.Error(w, err.Error(), status)
+		Jsend.Error(req.Context(), w, err.Error(), status)
 		return
 	}
 
@@ -56,38 +56,38 @@ func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err = decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = Validators.User(dto.User)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if dto.Password != dto.CheckPassword {
-		Jsend.Error(w, "passwords must match", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "passwords must match", http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.CreateUser(dto.User)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = Services.CreateDefaultPermissions(d.Id)
 	if err != nil {
-		Jsend.Error(w, "adding default permissions failed", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "adding default permissions failed", http.StatusInternalServerError)
 		return
 	}
 
 	err = Services.UpdatePasswordAndSalt(d.Id, dto.Password)
 	if err != nil {
-		Jsend.Error(w, "invalid password", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "invalid password", http.StatusBadRequest)
 		return
 	}
 
-	Jsend.Success(w, d)
+	Jsend.Success(req.Context(), w, d)
 }

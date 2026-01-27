@@ -1,7 +1,10 @@
 package Jsend
 
 import (
+	"Polybub/Utilities/Logger/WriteLogger"
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -84,31 +87,42 @@ func WritePlain(w http.ResponseWriter, body string, statuses ...int) {
 // JSENDERS
 
 // Error writes error body with the given message.
-func Error(w http.ResponseWriter, message string, statuses ...int) error {
+func Error(ctx context.Context, w http.ResponseWriter, message string, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, "Error", statuses...)
 	return Write(w, NewError(message, 0, nil), statuses...)
 }
 
 // ErrorCode writes error body with the given message and code.
-func ErrorCode(w http.ResponseWriter, message string, code int, statuses ...int) error {
+func ErrorCode(ctx context.Context, w http.ResponseWriter, message string, code int, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, "ErrorCode", statuses...)
 	return Write(w, NewError(message, code, nil), statuses...)
 }
 
 // ErrorCodeData writes error body with the given message, code and data.
-func ErrorCodeData(w http.ResponseWriter, message string, code int, data interface{}, statuses ...int) error {
+func ErrorCodeData(ctx context.Context, w http.ResponseWriter, message string, code int, data interface{}, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, "ErrorCodeData", statuses...)
 	return Write(w, NewError(message, code, data), statuses...)
 }
 
 // Fail writes failed body with the given data.
-func Fail(w http.ResponseWriter, data interface{}, statuses ...int) error {
+func Fail(ctx context.Context, w http.ResponseWriter, data interface{}, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, "Fail", statuses...)
 	return Write(w, NewFail(data), statuses...)
 }
 
 // Redirect a string url back to the client
-func Redirect(w http.ResponseWriter, url string, statuses ...int) {
+func Redirect(ctx context.Context, w http.ResponseWriter, url string, statuses ...int) {
+	WriteLogger.WriteLogger(ctx, "Redirect", statuses...)
 	WritePlain(w, url, statuses...)
 }
 
 // Success writes successful body with the given data.
-func Success(w http.ResponseWriter, data interface{}, statuses ...int) error {
+func Success(ctx context.Context, w http.ResponseWriter, data interface{}, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, "Success", statuses...)
 	return Write(w, New(data), statuses...)
+}
+
+func Ui(ctx context.Context, w http.ResponseWriter, wrappedBody string, statuses ...int) {
+	WriteLogger.WriteLogger(ctx, "UI", statuses...)
+	fmt.Fprint(w, wrappedBody)
 }

@@ -7,7 +7,6 @@ import (
 	"Polybub/Jsend"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -19,7 +18,7 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 	case "POST":
 		postFooBar(w, req)
 	default:
-		Jsend.Error(w, "not allowed", http.StatusMethodNotAllowed)
+		Jsend.Error(req.Context(), w, "not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
@@ -38,36 +37,36 @@ func getFooBar(w http.ResponseWriter, req *http.Request) {
 
 	htmlText, err := GlobalWrapper.GetSafeHtml(path, data)
 	if err != nil {
-		Jsend.Error(w, "error reading template", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "error reading template", http.StatusBadRequest)
 		return
 	}
-	fmt.Fprint(w, htmlText)
+	Jsend.Ui(req.Context(), w, htmlText)
 }
 
 func postFooBar(w http.ResponseWriter, req *http.Request) {
 	buf, err := io.ReadAll(req.Body)
 	if err != nil {
-		Jsend.Error(w, "Something went wrong!", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Something went wrong!", http.StatusInternalServerError)
 		return
 	}
 
 	var dto Models.FooBar
 	err = json.Unmarshal(buf, &dto)
 	if err != nil {
-		Jsend.Error(w, "missing or invalid data", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, "missing or invalid data", http.StatusBadRequest)
 		return
 	}
 	err = Validators.FooBar(dto)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	obj, err := Services.CreateFooBar(dto)
 	if err != nil {
-		Jsend.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
 
-	Jsend.Success(w, obj)
+	Jsend.Success(req.Context(), w, obj)
 }

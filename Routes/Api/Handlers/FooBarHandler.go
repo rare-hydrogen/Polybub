@@ -29,27 +29,27 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
 	d, err := Services.ReadSingleFooBar(int32(id))
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
-	Jsend.Success(w, d)
+	Jsend.Success(req.Context(), w, d)
 }
 
 func getManyFooBar(w http.ResponseWriter, req *http.Request) {
 	d, err := Services.ReadManyFooBar()
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
-	Jsend.Success(w, d)
+	Jsend.Success(req.Context(), w, d)
 }
 
 func postFooBar(w http.ResponseWriter, req *http.Request) {
@@ -57,17 +57,17 @@ func postFooBar(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.CreateFooBar(dto)
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
-	Jsend.Success(w, d)
+	Jsend.Success(req.Context(), w, d)
 }
 
 func patchFooBar(w http.ResponseWriter, req *http.Request) {
@@ -75,31 +75,31 @@ func patchFooBar(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.UpdateFooBar(dto)
 	if err != nil {
-		Jsend.Error(w, err.Error(), http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	Jsend.Success(w, d)
+	Jsend.Success(req.Context(), w, d)
 }
 
 func deleteFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
 	err = Services.SoftDeleteFooBar(int32(id))
 	if err != nil {
-		Jsend.Error(w, err.Error())
+		Jsend.Error(req.Context(), w, err.Error())
 		return
 	}
 
-	Jsend.Success(w, nil)
+	Jsend.Success(req.Context(), w, nil)
 }
