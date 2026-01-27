@@ -51,5 +51,5 @@ go env -w CGO_ENABLED=1
 sudo apt-get install build-essential
 
 # Enable the agent (and by extension, systemctl) to access the private.pem
-sudo chown github_agent:github_agent /var/www/app/Polybub/Certs/private.pem
-sudo chown github_agent:github_agent /var/www/app/Polybub/Certs
+sudo chown github_agent:github_agent /var/www/app/Polybub/.certs/private.pem
+sudo chown github_agent:github_agent /var/www/app/Polybub/.certs
