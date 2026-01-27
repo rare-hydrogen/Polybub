@@ -41,7 +41,6 @@ func getCreateUser(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//Jsend.Ui(req.Context(), w, wrappedBody)
 	Jsend.Ui(req.Context(), w, wrappedBody, http.StatusOK)
 }
 
