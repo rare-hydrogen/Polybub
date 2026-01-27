@@ -6,9 +6,9 @@ import (
 	"github.com/rs/cors"
 
 	"Polybub/Routes"
-	"Polybub/Swagger"
 	"Polybub/Utilities"
 	"Polybub/Utilities/Logger/RequestMiddleware"
+	"Polybub/Utilities/Swagger"
 )
 
 func main() {
