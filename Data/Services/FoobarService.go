@@ -3,10 +3,11 @@ package Services
 import (
 	"Polybub/Data"
 	"Polybub/Data/Models"
+	"context"
 )
 
-func CreateFooBar(data Models.FooBar) (Models.FooBar, error) {
-	var db = Data.GetConnection()
+func CreateFooBar(ctx context.Context, data Models.FooBar) (Models.FooBar, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	err := db.Model(&Models.FooBar{}).
 		Save(&data).
@@ -18,8 +19,8 @@ func CreateFooBar(data Models.FooBar) (Models.FooBar, error) {
 	return data, nil
 }
 
-func ReadSingleFooBar(id int32) (Models.FooBar, error) {
-	var db = Data.GetConnection()
+func ReadSingleFooBar(ctx context.Context, id int32) (Models.FooBar, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
@@ -33,8 +34,8 @@ func ReadSingleFooBar(id int32) (Models.FooBar, error) {
 	return single, nil
 }
 
-func ReadManyFooBar() ([]Models.FooBar, error) {
-	var db = Data.GetConnection()
+func ReadManyFooBar(ctx context.Context) ([]Models.FooBar, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	many := []Models.FooBar{}
 	err := db.Find(&many).Error
@@ -45,8 +46,8 @@ func ReadManyFooBar() ([]Models.FooBar, error) {
 	return many, nil
 }
 
-func ReadLatestFooBar() (Models.FooBar, error) {
-	var db = Data.GetConnection()
+func ReadLatestFooBar(ctx context.Context) (Models.FooBar, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
@@ -59,8 +60,8 @@ func ReadLatestFooBar() (Models.FooBar, error) {
 	return single, nil
 }
 
-func UpdateFooBar(data Models.FooBar) (Models.FooBar, error) {
-	var db = Data.GetConnection()
+func UpdateFooBar(ctx context.Context, data Models.FooBar) (Models.FooBar, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
@@ -75,8 +76,8 @@ func UpdateFooBar(data Models.FooBar) (Models.FooBar, error) {
 	return single, nil
 }
 
-func SoftDeleteFooBar(id int32) error {
-	var db = Data.GetConnection()
+func SoftDeleteFooBar(ctx context.Context, id int32) error {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	var data = &Models.FooBar{
 		Id: id,

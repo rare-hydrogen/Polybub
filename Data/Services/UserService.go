@@ -5,6 +5,7 @@ import (
 	"Polybub/Data/Audit"
 	"Polybub/Data/Enums/UserGroups"
 	"Polybub/Data/Models"
+	"context"
 )
 
 type userVariant struct {
@@ -32,8 +33,8 @@ func getUserVariant(user Models.User) userVariant {
 	return v
 }
 
-func CreateUser(data Models.User) (userVariant, error) {
-	var db = Data.GetConnection()
+func CreateUser(ctx context.Context, data Models.User) (userVariant, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	data.Id = 0
 	data.Password = ""
@@ -50,8 +51,8 @@ func CreateUser(data Models.User) (userVariant, error) {
 	return getUserVariant(data), nil
 }
 
-func ReadSingleUser(id int32) (userVariant, error) {
-	var db = Data.GetConnection()
+func ReadSingleUser(ctx context.Context, id int32) (userVariant, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
@@ -65,8 +66,8 @@ func ReadSingleUser(id int32) (userVariant, error) {
 	return getUserVariant(single), nil
 }
 
-func GetIdByEmail(email string) (int32, error) {
-	var db = Data.GetConnection()
+func GetIdByEmail(ctx context.Context, email string) (int32, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
@@ -80,8 +81,8 @@ func GetIdByEmail(email string) (int32, error) {
 	return single.Id, nil
 }
 
-func GetIdByUsername(username string) (int32, error) {
-	var db = Data.GetConnection()
+func GetIdByUsername(ctx context.Context, username string) (int32, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
@@ -95,8 +96,8 @@ func GetIdByUsername(username string) (int32, error) {
 	return single.Id, nil
 }
 
-func ReadManyUser() ([]userVariant, error) {
-	var db = Data.GetConnection()
+func ReadManyUser(ctx context.Context) ([]userVariant, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	many := []Models.User{}
 	err := db.Find(&many).Error
@@ -112,8 +113,8 @@ func ReadManyUser() ([]userVariant, error) {
 	return manyVariants, nil
 }
 
-func UpdateUser(data Models.User) (userVariant, error) {
-	var db = Data.GetConnection()
+func UpdateUser(ctx context.Context, data Models.User) (userVariant, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	data.Password = ""
 	data.Salt = ""
@@ -131,8 +132,8 @@ func UpdateUser(data Models.User) (userVariant, error) {
 	return getUserVariant(single), nil
 }
 
-func SoftDeleteUser(id int32) error {
-	var db = Data.GetConnection()
+func SoftDeleteUser(ctx context.Context, id int32) error {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	var data = &Models.User{
 		Id: id,
@@ -149,8 +150,8 @@ func SoftDeleteUser(id int32) error {
 }
 
 // Unsafe
-func UnsafeReadSingleUser(id int32) (Models.User, error) {
-	var db = Data.GetConnection()
+func UnsafeReadSingleUser(ctx context.Context, id int32) (Models.User, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
@@ -164,8 +165,8 @@ func UnsafeReadSingleUser(id int32) (Models.User, error) {
 	return single, nil
 }
 
-func UnsafeGetUserByUsername(username string) (Models.User, error) {
-	var db = Data.GetConnection()
+func UnsafeGetUserByUsername(ctx context.Context, username string) (Models.User, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	user := Models.User{}
 	err := db.Model(&Models.User{}).

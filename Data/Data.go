@@ -1,7 +1,6 @@
 package Data
 
 import (
-	"Polybub/Auth/OAuth2"
 	"Polybub/Data/Callbacks"
 	"Polybub/Utilities"
 	"time"
@@ -11,9 +10,6 @@ import (
 )
 
 func GetConnection() *gorm.DB {
-	claims := OAuth2.GlobalClaims
-	Callbacks.GlobalByName = claims.Name
-
 	gormConfig := &gorm.Config{
 		NowFunc: func() time.Time {
 			return time.Now().UTC()

@@ -38,7 +38,7 @@ func getVariantMfaData(req *http.Request) (variantMfaData, error) {
 	}
 
 	// Use claims
-	user, err := Services.UnsafeReadSingleUser(claims.Subject)
+	user, err := Services.UnsafeReadSingleUser(req.Context(), claims.Subject)
 	if err != nil {
 		return variantMfaData{}, err
 	}

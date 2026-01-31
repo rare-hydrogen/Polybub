@@ -41,7 +41,11 @@ func WriteLoggerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogRequestWithContext(log *slog.Logger, ctx context.Context) *slog.Logger {
-	rdv := ctx.Value("requestDetails").(Logger.RequestDetails)
+	rdv, ok := ctx.Value("requestDetails").(Logger.RequestDetails)
+	if ok != true {
+		// If the middleware didn't add requestDetails, log it and continue
+		return slog.With(slog.String("Logging Error", "Nil Context"))
+	}
 
 	return log.With(
 		slog.Int64("UserId", int64(rdv.UserId)),

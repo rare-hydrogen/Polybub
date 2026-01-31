@@ -7,8 +7,6 @@ import (
 	"net/http"
 )
 
-var GlobalClaims Claims
-
 func NewPerm(name string, isCreate bool, isRead bool, isUpdate bool, isDelete bool) Models.Permission {
 	// Easily format a new perms object
 	return Models.Permission{
@@ -103,9 +101,6 @@ func getLockHandler(handler http.HandlerFunc, userGroup *int32, perm Models.Perm
 			return
 		}
 
-		// Dump the user's claims into a global object for the process
-		GlobalClaims = claims
-
 		if userGroup != nil {
 			if claims.Audience != *userGroup {
 				failHandle(w, http.StatusForbidden, "Forbidden.")
@@ -143,9 +138,6 @@ func JwtPermitRequest(req *http.Request, perm Models.Permission, userGroup *int3
 	if err != nil {
 		return http.StatusUnauthorized, errors.New("cannot read token")
 	}
-
-	// Dump the user's claims into a global object for the process
-	GlobalClaims = claims
 
 	if userGroup != nil {
 		if claims.Audience != *userGroup {

@@ -28,10 +28,10 @@ func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	userId, err := Services.GetIdByEmail(givenEmail)
+	userId, err := Services.GetIdByEmail(req.Context(), givenEmail)
 	if err == nil {
 		// If there is a real user:
-		err2 := Services.AddResetKeyThenDeleteOthers(userId, givenEmail)
+		err2 := Services.AddResetKeyThenDeleteOthers(req.Context(), userId, givenEmail)
 		if err2 != nil {
 			// We don't show errors to avoid giving away user identities
 		}
@@ -59,7 +59,7 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	actualKey, err := Services.GetResetKey(int32(givenUserId))
+	actualKey, err := Services.GetResetKey(req.Context(), int32(givenUserId))
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
@@ -70,13 +70,13 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = Services.DeleteAllResetKeys(int32(givenUserId))
+	err = Services.DeleteAllResetKeys(req.Context(), int32(givenUserId))
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
 
-	err = Services.UpdatePasswordAndSalt(int32(givenUserId), newPassword)
+	err = Services.UpdatePasswordAndSalt(req.Context(), int32(givenUserId), newPassword)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return

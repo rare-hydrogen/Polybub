@@ -4,10 +4,11 @@ import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Data"
 	"Polybub/Data/Models"
+	"context"
 )
 
-func CreatePermission(data Models.Permission) (Models.Permission, error) {
-	var db = Data.GetConnection()
+func CreatePermission(ctx context.Context, data Models.Permission) (Models.Permission, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	err := db.Model(&Models.Permission{}).
 		Save(&data).
@@ -19,7 +20,7 @@ func CreatePermission(data Models.Permission) (Models.Permission, error) {
 	return data, nil
 }
 
-func CreateDefaultPermissions(userId int32) error {
+func CreateDefaultPermissions(ctx context.Context, userId int32) error {
 	defaultPermissions := []Models.Permission{
 		OAuth2.NewPerm("MfaCode", true, true, true, false),
 		OAuth2.NewPerm("Dashboard", true, false, false, false),
@@ -30,7 +31,7 @@ func CreateDefaultPermissions(userId int32) error {
 		defaultPermissions[i].UserId = userId
 	}
 
-	var db = Data.GetConnection()
+	var db = Data.GetConnection().WithContext(ctx)
 
 	err := db.Model(&[]Models.Permission{}).
 		Save(defaultPermissions).
@@ -42,8 +43,8 @@ func CreateDefaultPermissions(userId int32) error {
 	return nil
 }
 
-func ReadSinglePermission(id int32) (Models.Permission, error) {
-	var db = Data.GetConnection()
+func ReadSinglePermission(ctx context.Context, id int32) (Models.Permission, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.Permission{}
 	err := db.Model(&Models.Permission{}).
@@ -57,8 +58,8 @@ func ReadSinglePermission(id int32) (Models.Permission, error) {
 	return single, nil
 }
 
-func ReadUsersPermissions(userId int32) ([]Models.Permission, error) {
-	var db = Data.GetConnection()
+func ReadUsersPermissions(ctx context.Context, userId int32) ([]Models.Permission, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	many := []Models.Permission{}
 	err := db.
@@ -71,8 +72,8 @@ func ReadUsersPermissions(userId int32) ([]Models.Permission, error) {
 	return many, nil
 }
 
-func UpdatePermission(data Models.Permission) (Models.Permission, error) {
-	var db = Data.GetConnection()
+func UpdatePermission(ctx context.Context, data Models.Permission) (Models.Permission, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.Permission{}
 	err := db.Model(&Models.Permission{}).
@@ -87,8 +88,8 @@ func UpdatePermission(data Models.Permission) (Models.Permission, error) {
 	return single, nil
 }
 
-func SoftDeletePermission(id int32) error {
-	var db = Data.GetConnection()
+func SoftDeletePermission(ctx context.Context, id int32) error {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	var data = &Models.Permission{
 		Id: id,

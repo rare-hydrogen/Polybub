@@ -70,19 +70,19 @@ func postCreateUser(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	d, err := Services.CreateUser(dto.User)
+	d, err := Services.CreateUser(req.Context(), dto.User)
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = Services.CreateDefaultPermissions(d.Id)
+	err = Services.CreateDefaultPermissions(req.Context(), d.Id)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "adding default permissions failed", http.StatusInternalServerError)
 		return
 	}
 
-	err = Services.UpdatePasswordAndSalt(d.Id, dto.Password)
+	err = Services.UpdatePasswordAndSalt(req.Context(), d.Id, dto.Password)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "invalid password", http.StatusBadRequest)
 		return

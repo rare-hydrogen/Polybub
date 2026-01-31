@@ -21,9 +21,10 @@ func Test_Given_Valid_When_CreateFooBar_Then_ReturnsFoobar(t *testing.T) {
 		Amount:   1299,
 		Currency: money.USD,
 	}
+	ctx := TestHelpers.TestReqContext(TestHelpers.BasicRequestDetails)
 
 	// Act
-	result, err := Services.CreateFooBar(fooBar)
+	result, err := Services.CreateFooBar(ctx, fooBar)
 
 	// Assert
 	assert.Nil(t, err)
@@ -46,11 +47,12 @@ func Test_Given_Valid_When_GetSingleFooBar_Then_ReturnsFooBar(t *testing.T) {
 		Amount:   1299,
 		Currency: money.USD,
 	}
+	ctx := TestHelpers.TestReqContext(TestHelpers.BasicRequestDetails)
 
 	// Act
-	fb, err := Services.CreateFooBar(fooBar)
+	fb, err := Services.CreateFooBar(ctx, fooBar)
 	assert.Nil(t, err)
-	result, err := Services.ReadSingleFooBar(fb.Id)
+	result, err := Services.ReadSingleFooBar(ctx, fb.Id)
 
 	// Assert
 	assert.Nil(t, err)
@@ -73,12 +75,13 @@ func Test_Given_Valid_When_GetManyFooBar_Then_ReturnsManyFooBar(t *testing.T) {
 		Amount:   1299,
 		Currency: money.USD,
 	}
+	ctx := TestHelpers.TestReqContext(TestHelpers.BasicRequestDetails)
 
 	// Act
-	_, _ = Services.CreateFooBar(fooBar)
-	_, _ = Services.CreateFooBar(fooBar)
-	_, _ = Services.CreateFooBar(fooBar)
-	results, err := Services.ReadManyFooBar()
+	_, _ = Services.CreateFooBar(ctx, fooBar)
+	_, _ = Services.CreateFooBar(ctx, fooBar)
+	_, _ = Services.CreateFooBar(ctx, fooBar)
+	results, err := Services.ReadManyFooBar(ctx)
 
 	// Assert
 	for i := 0; i < len(results); i++ {
@@ -100,12 +103,13 @@ func Test_Given_Valid_When_UpdateFooBar_Then_ReturnsFooBar(t *testing.T) {
 		Amount:   1299,
 		Currency: money.USD,
 	}
+	ctx := TestHelpers.TestReqContext(TestHelpers.BasicRequestDetails)
 
 	// Act
-	fb, err := Services.CreateFooBar(fooBar)
+	fb, err := Services.CreateFooBar(ctx, fooBar)
 	assert.Nil(t, err)
 	fb.Name = "test2"
-	result, err := Services.UpdateFooBar(fb)
+	result, err := Services.UpdateFooBar(ctx, fb)
 
 	// Assert
 	assert.Nil(t, err)
@@ -122,13 +126,14 @@ func Test_Given_Valid_When_DeleteFooBar_Then_NoFooBar(t *testing.T) {
 		Amount:   1299,
 		Currency: money.USD,
 	}
+	ctx := TestHelpers.TestReqContext(TestHelpers.BasicRequestDetails)
 
 	// Act
-	fb, err := Services.CreateFooBar(fooBar)
+	fb, err := Services.CreateFooBar(ctx, fooBar)
 	assert.Nil(t, err)
-	err = Services.SoftDeleteFooBar(fb.Id)
+	err = Services.SoftDeleteFooBar(ctx, fb.Id)
 	assert.Nil(t, err)
-	_, err = Services.ReadSingleFooBar(fb.Id)
+	_, err = Services.ReadSingleFooBar(ctx, fb.Id)
 
 	// Assert
 	assert.Equal(t, err.Error(), "record not found")

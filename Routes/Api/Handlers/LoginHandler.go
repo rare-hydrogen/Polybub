@@ -25,7 +25,7 @@ func postLogin(w http.ResponseWriter, req *http.Request) {
 	username := req.Header.Get("Username")
 	password := req.Header.Get("Password")
 
-	user, jwtString, err := Services.Login(username, password)
+	user, jwtString, err := Services.Login(req.Context(), username, password)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "login failed", http.StatusBadRequest)
 		return

@@ -5,13 +5,14 @@ import (
 	"Polybub/Auth/Totp"
 	"Polybub/Data"
 	"Polybub/Data/Models"
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
 )
 
-func getJwtFromUser(user Models.User) (Models.User, string, error) {
-	permissions, err := ReadUsersPermissions(user.Id)
+func getJwtFromUser(ctx context.Context, user Models.User) (Models.User, string, error) {
+	permissions, err := ReadUsersPermissions(ctx, user.Id)
 	if err != nil {
 		return Models.User{}, "", err
 	}
@@ -25,8 +26,8 @@ func getJwtFromUser(user Models.User) (Models.User, string, error) {
 	return user, jwtString, nil
 }
 
-func Login(username string, password string) (Models.User, string, error) {
-	user, err := UnsafeGetUserByUsername(username)
+func Login(ctx context.Context, username string, password string) (Models.User, string, error) {
+	user, err := UnsafeGetUserByUsername(ctx, username)
 	if err != nil {
 		return Models.User{}, "", err
 	}
@@ -41,11 +42,11 @@ func Login(username string, password string) (Models.User, string, error) {
 		return Models.User{}, "", errors.New("incorrect password")
 	}
 
-	return getJwtFromUser(user)
+	return getJwtFromUser(ctx, user)
 }
 
-func MfaLogin(userId int32, code string) (Models.User, string, error) {
-	user, err := UnsafeReadSingleUser(userId)
+func MfaLogin(ctx context.Context, userId int32, code string) (Models.User, string, error) {
+	user, err := UnsafeReadSingleUser(ctx, userId)
 	if err != nil {
 		return Models.User{}, "", err
 	}
@@ -55,10 +56,10 @@ func MfaLogin(userId int32, code string) (Models.User, string, error) {
 		return Models.User{}, "", err
 	}
 
-	return getJwtFromUser(user)
+	return getJwtFromUser(ctx, user)
 }
 
-func MfaUpdate(userId int32, key string, code string) (Models.User, string, error) {
+func MfaUpdate(ctx context.Context, userId int32, key string, code string) (Models.User, string, error) {
 	// Simple check to make sure the supplied key and code work together
 	// because the user could submit a key that wasn't made by this backend
 	err := Totp.KeyMatchTotp(key, code)
@@ -66,7 +67,7 @@ func MfaUpdate(userId int32, key string, code string) (Models.User, string, erro
 		return Models.User{}, "", err
 	}
 
-	_, err = UpdateUser(Models.User{
+	_, err = UpdateUser(ctx, Models.User{
 		Id:      userId,
 		TotpKey: key,
 	})
@@ -74,15 +75,15 @@ func MfaUpdate(userId int32, key string, code string) (Models.User, string, erro
 		return Models.User{}, "", err
 	}
 
-	user, err := UnsafeReadSingleUser(userId)
+	user, err := UnsafeReadSingleUser(ctx, userId)
 	if err != nil {
 		return Models.User{}, "", err
 	}
-	return getJwtFromUser(user)
+	return getJwtFromUser(ctx, user)
 }
 
-func UpdatePasswordAndSalt(userId int32, password string) error {
-	var db = Data.GetConnection()
+func UpdatePasswordAndSalt(ctx context.Context, userId int32, password string) error {
+	var db = Data.GetConnection().WithContext(ctx)
 	var salt = uuid.New().String()
 	var user = Models.User{
 		Id:       userId,

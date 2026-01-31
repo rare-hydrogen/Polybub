@@ -1,14 +1,13 @@
 package Callbacks
 
 import (
+	"Polybub/Utilities/Logger"
 	"encoding/json"
 	"fmt"
 	"reflect"
 
 	"gorm.io/gorm"
 )
-
-var GlobalByName string
 
 func SetCallbacks(db *gorm.DB) {
 	db.Callback().Create().Before("gorm:create").Register("SetCreatedBy", setCreatedBy)
@@ -28,14 +27,22 @@ func setDeletedBy(db *gorm.DB) {
 	setByNameDeleted(db, "Deleted")
 }
 
-func checkByName() {
-	if GlobalByName == "" {
-		GlobalByName = "System"
+func checkByName(db *gorm.DB) string {
+	// Get name from Context
+	ctx := db.Statement.Context
+	rdv := ctx.Value("requestDetails").(Logger.RequestDetails)
+	ByName := rdv.UserName
+
+	// Handle non-users
+	if ByName == "" {
+		ByName = "System"
 	}
+
+	return ByName
 }
 
 func setByName(db *gorm.DB, CrudType string) {
-	checkByName()
+	ByName := checkByName(db)
 
 	if db.Statement.Schema == nil {
 		return
@@ -43,12 +50,12 @@ func setByName(db *gorm.DB, CrudType string) {
 
 	switch db.Statement.ReflectValue.Kind() {
 	case reflect.Struct:
-		db.Statement.SetColumn(CrudType+"By", GlobalByName)
+		db.Statement.SetColumn(CrudType+"By", ByName)
 	}
 }
 
 func setByNameDeleted(db *gorm.DB, CrudType string) {
-	checkByName()
+	ByName := checkByName(db)
 
 	tableName := db.Statement.Schema.Table
 	newStatement := fmt.Sprintf("UPDATE " + tableName + " SET DeletedBy = ? WHERE Id = ?")
@@ -59,7 +66,7 @@ func setByNameDeleted(db *gorm.DB, CrudType string) {
 		return
 	}
 
-	err = db.Exec(newStatement, GlobalByName, dest).Error
+	err = db.Exec(newStatement, ByName, dest).Error
 	if err != nil {
 		fmt.Printf("soft delete failed: " + err.Error())
 		return

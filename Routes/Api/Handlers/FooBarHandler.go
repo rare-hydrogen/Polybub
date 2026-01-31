@@ -33,7 +33,7 @@ func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	d, err := Services.ReadSingleFooBar(int32(id))
+	d, err := Services.ReadSingleFooBar(req.Context(), int32(id))
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error())
 		return
@@ -43,7 +43,7 @@ func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 }
 
 func getManyFooBar(w http.ResponseWriter, req *http.Request) {
-	d, err := Services.ReadManyFooBar()
+	d, err := Services.ReadManyFooBar(req.Context())
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error())
 		return
@@ -61,7 +61,7 @@ func postFooBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	d, err := Services.CreateFooBar(dto)
+	d, err := Services.CreateFooBar(req.Context(), dto)
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error())
 		return
@@ -79,7 +79,7 @@ func patchFooBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	d, err := Services.UpdateFooBar(dto)
+	d, err := Services.UpdateFooBar(req.Context(), dto)
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error(), http.StatusInternalServerError)
 		return
@@ -95,7 +95,7 @@ func deleteFooBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = Services.SoftDeleteFooBar(int32(id))
+	err = Services.SoftDeleteFooBar(req.Context(), int32(id))
 	if err != nil {
 		Jsend.Error(req.Context(), w, err.Error())
 		return

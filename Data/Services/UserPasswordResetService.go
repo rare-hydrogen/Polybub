@@ -4,11 +4,12 @@ import (
 	"Polybub/Data"
 	"Polybub/Data/Models"
 	"Polybub/Utilities/Smtp"
+	"context"
 	"crypto/rand"
 )
 
-func AddResetKeyThenDeleteOthers(userId int32, givenEmail string) error {
-	var db = Data.GetConnection()
+func AddResetKeyThenDeleteOthers(ctx context.Context, userId int32, givenEmail string) error {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	data := Models.UserPasswordReset{
 		UserId:   userId,
@@ -39,8 +40,8 @@ func AddResetKeyThenDeleteOthers(userId int32, givenEmail string) error {
 	return nil
 }
 
-func GetResetKey(userId int32) (string, error) {
-	var db = Data.GetConnection()
+func GetResetKey(ctx context.Context, userId int32) (string, error) {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	single := Models.UserPasswordReset{}
 	err := db.Model(&Models.UserPasswordReset{}).
@@ -54,8 +55,8 @@ func GetResetKey(userId int32) (string, error) {
 	return single.ResetKey, nil
 }
 
-func DeleteAllResetKeys(userId int32) error {
-	var db = Data.GetConnection()
+func DeleteAllResetKeys(ctx context.Context, userId int32) error {
+	var db = Data.GetConnection().WithContext(ctx)
 
 	err := db.Model(&Models.UserPasswordReset{}).
 		Where("UserId = ?", userId).

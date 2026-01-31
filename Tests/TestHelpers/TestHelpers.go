@@ -2,14 +2,27 @@ package TestHelpers
 
 import (
 	"Polybub/Data"
+	"Polybub/Data/Enums/UserGroups"
 	"Polybub/Routes/Jsend"
 	"Polybub/Utilities"
+	"Polybub/Utilities/Logger"
+	"context"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/google/uuid"
 )
+
+var BasicRequestDetails = Logger.RequestDetails{
+	UserId:      1,
+	UserName:    "username",
+	UserGroupId: UserGroups.InternalUsers,
+	Verb:        "",
+	Endpoint:    "",
+	QueryString: "",
+	Body:        "",
+}
 
 func FindRoot() string {
 	full, err := os.Getwd()
@@ -57,4 +70,8 @@ func ApplySchema() {
 
 func TestHandler(w http.ResponseWriter, req *http.Request) {
 	Jsend.Success(req.Context(), w, nil, http.StatusOK)
+}
+
+func TestReqContext(rdv Logger.RequestDetails) context.Context {
+	return context.WithValue(context.Background(), "requestDetails", rdv)
 }

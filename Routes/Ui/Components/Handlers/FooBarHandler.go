@@ -24,7 +24,7 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 
 func getFooBar(w http.ResponseWriter, req *http.Request) {
 	path := "Routes/Ui/Components/Templates/foobar.html"
-	data, err := Services.ReadLatestFooBar()
+	data, err := Services.ReadLatestFooBar(req.Context())
 	if err != nil {
 		data = Models.FooBar{
 			Id:       1,
@@ -62,7 +62,7 @@ func postFooBar(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	obj, err := Services.CreateFooBar(dto)
+	obj, err := Services.CreateFooBar(req.Context(), dto)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
 		return
