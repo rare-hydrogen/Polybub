@@ -10,6 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Build Binary
+        env:
+          GOOS: linux
+          GOARCH: amd64
+          CGO_ENABLED: true
+        run: |
+          go build -ldflags="-s -w" -o Polybub ./
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -17,9 +33,40 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy over SSH
+      - name: Copy Secrets to tmpfs
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'bash /var/www/app/Polybub/.github/workflows/deploy/script.bash'
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "touch /var/www/app/Polybub/config.json" &
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cat > /var/www/app/Polybub/config.json" <<EOF
+          ${{ secrets.CONFIG }}
+          EOF
+
+      - name: Stop App
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "
+            sudo systemctl stop Polybub || true &
+            sudo systemctl reset-failed Polybub || true
+          "
+
+      - name: Copy Binary to Remote
+        run: |
+          scp Polybub ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/app/Polybub/Polybub
+
+      - name: Run App
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "
+            sudo systemctl daemon-reload
+            sudo systemd-run \
+              --unit=Polybub \
+              --property=Restart=no \
+              --property=NoNewPrivileges=yes \
+              --property=PrivateTmp=yes \
+              --property=ProtectSystem=strict \
+              /var/www/app/Polybub/Polybub
+          "
+
+      - name: Clean up Secrets
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'rm -rf /var/www/app/Polybub/config.json'
 
       - name: Clean up SSH
         run: |

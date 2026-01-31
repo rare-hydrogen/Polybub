@@ -29,27 +29,25 @@ sudo chmod 600 /home/github_agent/.ssh/authorized_keys
 sudo passwd -l github_agent
 
 # Add their command + ssh public key 
+# TODO: Should I add commands here?
 cat >> /home/github_agent/.ssh/authorized_keys <<EOF
 command="$DEPLOY_CMD"$DEPLOY_DTL $PUB_KEY
 EOF
-
-# Install go so deploy agent can build exe
-sudo snap install go --channel=1.25/stable --classic
 
 # Add directories for repo
 sudo mkdir -p /var/www/App
 sudo chown github_agent:github_agent /var/www/app/Polybub -R
 
 # Add service to systemctl
+# TODO: Maybe I can skip this?
 cp /var/www/app/Polybub/.github/workflows/deploy/polybub.service /etc/systemd/system/polybub.service
 sudo systemctl daemon-reload
 
-# Enable agent to use sudo systmctl
-echo 'github_agent ALL=(root) NOPASSWD: /bin/systemctl restart polybub.service' | sudo tee /etc/sudoers.d/polybub-deploy
-
-# Add and Enable CGO for golang's sqlite3
-go env -w CGO_ENABLED=1
-sudo apt-get install build-essential
+# Enable agent to use password-less sudo only for specific systemctl commands
+echo 'github_agent ALL=(root) NOPASSWD: deployuser ALL=(root) NOPASSWD: \
+  /usr/bin/systemd-run, \
+  /bin/systemctl' | sudo tee /etc/sudoers.d/polybub-deploy
+# or use sudo nano /etc/sudoers.d/polybub-deploy
 
 # Enable the agent (and by extension, systemctl) to access the private.pem
 sudo chown github_agent:github_agent /var/www/app/Polybub/.certs/private.pem

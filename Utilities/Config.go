@@ -25,10 +25,17 @@ type Config struct {
 var GlobalConfig Config
 
 func GetConfig() Config {
+	// Use the local file
 	file, err := os.Open("config.json")
 	if err != nil {
-		log.Fatal(err)
+		// If no local overwrite, get from tmpfs
+		file, err = os.Open("/var/www/app/Polybub/config.json")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
+
+	// Use the local file
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
