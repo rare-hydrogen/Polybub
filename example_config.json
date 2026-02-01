@@ -1,6 +1,7 @@
 {   
     "env": "development",
     "connection": "asdf",
+    "certPath": "asdf",
 	"pepper": "asdf",
     "port": "8090",
     "domain": "asdf",
@@ -12,5 +13,4 @@
     "sendgridName": "foobar",
     "sendgridEmail": "foobar@asdf.com",
     "sendgridKey": "key"
-
 }

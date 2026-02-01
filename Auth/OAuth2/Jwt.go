@@ -16,7 +16,7 @@ import (
 
 func readPrivateKey() (*rsa.PrivateKey, error) {
 	// Get the file
-	pd, err := os.ReadFile("./.certs/private.pem")
+	pd, err := os.ReadFile(Utilities.GlobalConfig.CertPath)
 	if err != nil {
 		return nil, errors.New("missing private key")
 	}

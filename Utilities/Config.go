@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Env           string `json:"env"`
 	Connection    string `json:"connection"`
+	CertPath      string `json:"certPath"`
 	Pepper        string `json:"pepper"`
 	Port          string `json:"port"`
 	Domain        string `json:"domain"`
