@@ -52,3 +52,6 @@ echo 'github_agent ALL=(root) NOPASSWD: deployuser ALL=(root) NOPASSWD: \
 # Enable the agent (and by extension, systemctl) to access the private.pem
 sudo chown github_agent:github_agent /var/www/app/Polybub/.certs/private.pem
 sudo chown github_agent:github_agent /var/www/app/Polybub/.certs
+
+# Enable github_agent to run / own everything:
+chown -R github_agent:github_agent /var/www/app/Polybub
