@@ -5,6 +5,7 @@ import (
 	"Polybub/Data/Services"
 	"Polybub/Data/Validators"
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"encoding/json"
 	"io"
@@ -23,7 +24,7 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getFooBar(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Components/Templates/foobar.html"
+	b, _ := TemplateEmbeds.ComponentEmbeds.ReadFile("ComponentEmbeds/foobar.html")
 	data, err := Services.ReadLatestFooBar(req.Context())
 	if err != nil {
 		data = Models.FooBar{
@@ -35,7 +36,7 @@ func getFooBar(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	htmlText, err := GlobalWrapper.GetSafeHtml(path, data)
+	htmlText, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "error reading template", http.StatusBadRequest)
 		return

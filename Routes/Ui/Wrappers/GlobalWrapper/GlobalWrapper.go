@@ -1,10 +1,10 @@
 package GlobalWrapper
 
 import (
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Utilities"
 	"bytes"
 	"html/template"
-	"path/filepath"
 )
 
 type globalWrapperVariant struct {
@@ -12,10 +12,10 @@ type globalWrapperVariant struct {
 	Body  template.HTML
 }
 
-func GetSafeHtml(filePath string, data any) (string, error) {
-	temp := template.New(filepath.Base(filePath))
+func GetSafeHtml(b []byte, data any) (string, error) {
+	temp := template.New("")
 	temp.Funcs(FuncMap)
-	body, err := temp.ParseFiles(filePath)
+	body, err := temp.Parse(string(template.HTML(b)))
 	if err != nil {
 		return "", err
 	}
@@ -27,8 +27,9 @@ func GetSafeHtml(filePath string, data any) (string, error) {
 }
 
 func GetWrappedTemplate(safeHtml string) (string, error) {
-	wrapPath := "Routes/Ui/Wrappers/GlobalWrapper/private.html"
-	wrap, err := template.ParseFiles(wrapPath)
+	temp := template.New("")
+	wrappedBytes, _ := TemplateEmbeds.WrapperEmbeds.ReadFile("WrapperEmbeds/private.html")
+	wrap, err := temp.Parse(string(template.HTML(wrappedBytes)))
 	if err != nil {
 		return "", err
 	}
@@ -45,8 +46,9 @@ func GetWrappedTemplate(safeHtml string) (string, error) {
 }
 
 func GetPublicTemplate(safeHtml string) (string, error) {
-	wrapPath := "Routes/Ui/Wrappers/GlobalWrapper/global.html"
-	wrap, err := template.ParseFiles(wrapPath)
+	temp := template.New("")
+	wrappedBytes, _ := TemplateEmbeds.WrapperEmbeds.ReadFile("WrapperEmbeds/global.html")
+	wrap, err := temp.Parse(string(template.HTML(wrappedBytes)))
 	if err != nil {
 		return "", err
 	}

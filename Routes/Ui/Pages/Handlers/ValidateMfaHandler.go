@@ -2,6 +2,7 @@ package Handlers
 
 import (
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )
@@ -13,9 +14,9 @@ func ValidateMfaHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getValidateMfa(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/validate-mfa.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/validate-mfa.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return

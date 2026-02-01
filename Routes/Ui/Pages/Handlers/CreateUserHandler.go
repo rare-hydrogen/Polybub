@@ -6,6 +6,7 @@ import (
 	"Polybub/Data/Services"
 	"Polybub/Data/Validators"
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"Polybub/Utilities/Permissions"
 	"encoding/json"
@@ -27,9 +28,9 @@ func CreateUserHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getCreateUser(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/create-user.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/create-user.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return

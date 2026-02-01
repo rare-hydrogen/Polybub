@@ -2,6 +2,7 @@ package Handlers
 
 import (
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )
@@ -19,9 +20,9 @@ func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getForgotPassword(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/forgot-password.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/forgot-password.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
@@ -37,9 +38,9 @@ func getForgotPassword(w http.ResponseWriter, req *http.Request) {
 }
 
 func getForgotPasswordConfirm(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/forgot-password-confirm.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/forgot-password-confirm.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
@@ -55,9 +56,9 @@ func getForgotPasswordConfirm(w http.ResponseWriter, req *http.Request) {
 }
 
 func getForgotPasswordAttempt(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/forgot-password-attempt.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/forgot-password-attempt.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return

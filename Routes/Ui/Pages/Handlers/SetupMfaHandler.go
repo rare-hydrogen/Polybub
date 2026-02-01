@@ -5,6 +5,7 @@ import (
 	"Polybub/Auth/Totp"
 	"Polybub/Data/Services"
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"encoding/base64"
 	"html/template"
@@ -63,8 +64,8 @@ func getSetupMfa(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	path := "Routes/Ui/Pages/Templates/setup-mfa.html"
-	body, err := GlobalWrapper.GetSafeHtml(path, v)
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/setup-mfa.html")
+	body, err := GlobalWrapper.GetSafeHtml(b, v)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
@@ -86,8 +87,8 @@ func getSetupMfaForm(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	path := "Routes/Ui/Pages/Templates/send-code-to-check.html"
-	body, err := GlobalWrapper.GetSafeHtml(path, v)
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/send-code-to-check.html")
+	body, err := GlobalWrapper.GetSafeHtml(b, v)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return

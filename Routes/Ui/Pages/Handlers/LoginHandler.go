@@ -2,6 +2,7 @@ package Handlers
 
 import (
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )
@@ -13,9 +14,9 @@ func LoginHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getLogin(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/login.html"
+	b, err := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/login.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
@@ -23,7 +24,7 @@ func getLogin(w http.ResponseWriter, req *http.Request) {
 
 	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
 	}
 

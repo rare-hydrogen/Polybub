@@ -3,6 +3,7 @@ package Handlers
 import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Routes/Jsend"
+	"Polybub/Routes/Ui/TemplateEmbeds"
 	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
 	"net/http"
 )
@@ -19,7 +20,7 @@ func DashboardHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getDashboard(w http.ResponseWriter, req *http.Request) {
-	path := "Routes/Ui/Pages/Templates/dashboard.html"
+	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/dashboard.html")
 	tokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading token", http.StatusInternalServerError)
@@ -36,7 +37,7 @@ func getDashboard(w http.ResponseWriter, req *http.Request) {
 		Name: claims.Name,
 	}
 
-	body, err := GlobalWrapper.GetSafeHtml(path, data)
+	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
 		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
 		return
