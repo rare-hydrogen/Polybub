@@ -51,7 +51,7 @@ To run the project with all features locally, you need to do a few things:
 1. Clone / Pull the repo.
 2. Add your secrets to a `Polybub/config.json` file (see example).
 3. Create a Sqlite db under `Polybub/.db/` and apply the `Polybub/Data/Schema/schema.sql` to give it the right tables etc.
-4. Add a `private.pem` under `Polybub/.certs/`
+4. Create a `private.pem` under `Polybub/.certs/`
 5. **BUILD** with `go mod tidy` to get the modules.
 6. **RUN** with `go run main.go` or the `launch.json` file.
 

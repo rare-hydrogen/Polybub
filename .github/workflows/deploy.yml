@@ -10,6 +10,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      SSH_TARGET: ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,39 +37,33 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy Secrets to tmpfs
+      - name: Stop the App
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "touch /var/www/app/Polybub/config.json" &
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cat > /var/www/app/Polybub/config.json" <<EOF
+          ssh $SSH_TARGET "sudo systemctl stop Polybub || true"
+          ssh $SSH_TARGET "sudo systemctl reset-failed Polybub || true"
+
+      - name: Copy Secrets to server
+        run: |
+          cat > config.json <<'EOF'
           ${{ secrets.CONFIG }}
           EOF
-
-      - name: Stop App
-        run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "
-            sudo systemctl stop Polybub || true &
-            sudo systemctl reset-failed Polybub || true
-          "
+          scp config.json $SSH_TARGET:/var/www/app/Polybub/config.json
 
       - name: Copy Binary to Remote
         run: |
-          scp Polybub ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/app/Polybub/Polybub
+          scp Polybub $SSH_TARGET:/var/www/app/Polybub/Polybub
 
-      - name: Run App
+      - name: Start App
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "
-            sudo systemctl daemon-reload
-            sudo systemd-run \
-              --unit=Polybub \
-              --property=User=github_agent \
-              --property=ProtectSystem=false \
-              /var/www/app/Polybub/Polybub
-          "
+          ssh $SSH_TARGET "sudo systemctl daemon-reload"
+          ssh $SSH_TARGET "sudo systemd-run \
+            --unit=Polybub \
+            --property=User=github_agent \
+            --property=ReadWritePaths=/var/www/app/Polybub/.db \
+            /var/www/app/Polybub/Polybub"
 
-      - name: Clean up Secrets
+      - name: Clean up
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'rm -rf /var/www/app/Polybub/config.json'
-
-      - name: Clean up SSH
-        run: |
+          ssh $SSH_TARGET "rm -rf /var/www/app/Polybub/config.json"
+          rm -rf config.json
           rm -rf ~/.ssh
