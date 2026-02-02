@@ -3,16 +3,18 @@
 # INSTRUCTIONS
 # Use this script as a template to setup the deploy agent the first time 
 # on a remote server. You shouldn't need to run this again. Designed for 
-# root user to execute on an Ubuntu server with Snap installed already.
+# root user to execute on an Ubuntu 24.04 (LTS) x64 server with Snap installed already.
 
 # Add the deployment user
 sudo useradd \
   --system \
   --create-home \
   --home-dir /home/github_agent \
-  --shell /usr/sbin/nologin \
+  --shell /usr/bin/bash \
   github_agent
 /
+
+echo "added user"
 
 # Allow the deployment user to use SSL
 sudo -u github_agent mkdir -p /home/github_agent/.ssh
@@ -22,15 +24,22 @@ sudo chown github_agent:github_agent /home/github_agent/.ssh/authorized_keys
 sudo chmod 600 /home/github_agent/.ssh/authorized_keys
 sudo passwd -l github_agent
 
+echo "added SSL"
+
 # Add directories for the app
-sudo mkdir -p /var/www/app
+sudo mkdir -p /var/www/app/Polybub
+
+echo "added dir"
 
 # Restrict agent to running in non-interactive mode
 DEPLOY_DTL="no-port-forwarding,no-agent-forwarding,no-X11-forwarding"
-DEPLOY_SSH_PUBLIC_KEY="ssh AAAA..." # MANUALLY add a PUBLIC key here
+# MANUALLY add a PUBLIC key here
+DEPLOY_SSH_PUBLIC_KEY="" # EX: ssh-rsa AAAA...= github_agent
 cat >> /home/github_agent/.ssh/authorized_keys <<EOF
 $DEPLOY_DTL $DEPLOY_SSH_PUBLIC_KEY
 EOF
+
+echo "added authorized_keys"
 
 # Enable agent to use password-less sudo only for specific commands
 # or manually modify using sudo nano /etc/sudoers.d/polybub-deploy
@@ -38,11 +47,22 @@ echo 'github_agent ALL=(root) NOPASSWD: \
   /bin/systemctl stop Polybub, \
   /bin/systemctl reset-failed Polybub, \
   /bin/systemctl daemon-reload, \
-  /usr/bin/systemd-run --unit=Polybub --property=User=github_agent --property=ReadWritePaths=/var/www/app/Polybub/.db 
+  /usr/bin/systemd-run --unit=Polybub --property=User=github_agent --property=ReadWritePaths=/var/www/app/Polybub/.db /var/www/app/Polybub/Polybub
   ' | sudo tee /etc/sudoers.d/polybub-deploy
 
-# MANUALLY ADD A private.pem UNDER .certs
-# MANUALLY ADD A sqlite file UNDER .db
+echo "added password-less sudo"
+
+# Or MANUALLY add a sqlitedb file UNDER .db
+sudo mkdir -p /var/www/app/Polybub/.db
+touch /var/www/app/Polybub/.db/sqlitedb
+
+# Or MANUALLY add a private.pem UNDER .certs
+sudo mkdir -p /var/www/app/Polybub/.certs
+touch /var/www/app/Polybub/.certs/private.pem
+
+echo "added placeholder paths and files"
 
 # Then, change ownership on all files:
 sudo chown github_agent:github_agent /var/www/app/Polybub -R
+
+echo "updated ownership"

@@ -56,11 +56,7 @@ jobs:
       - name: Start App
         run: |
           ssh $SSH_TARGET "sudo systemctl daemon-reload"
-          ssh $SSH_TARGET "sudo systemd-run \
-            --unit=Polybub \
-            --property=User=github_agent \
-            --property=ReadWritePaths=/var/www/app/Polybub/.db \
-            /var/www/app/Polybub/Polybub"
+          ssh $SSH_TARGET "sudo /usr/bin/systemd-run --unit=Polybub --property=User=github_agent --property=ReadWritePaths=/var/www/app/Polybub/.db /var/www/app/Polybub/Polybub"
 
       - name: Clean up
         run: |

@@ -59,11 +59,12 @@ To run the project with all features locally, you need to do a few things:
 
 To run your web app on a remote server, you need to handle the same things you did to get it running locally (`database, code, secrets, certs`), before running it on a remote machine.
 
-I've provided an example `setup-template.bash` to configure a VM before using `deploy.yml` to build the project and deploy it via Github Actions. That script needs the following secrets:
+I've provided an example `setup.bash` you need to run as root before using `deploy.yml` to build the project and deploy it remotely via Github Actions. That script needs the following secrets:
 
-- `DEPLOY_HOST`
-- `DEPLOY_SSH_PRIVATE_KEY`
-- `DEPLOY_USER`
+- `CONFIG` (your json file)
+- `DEPLOY_HOST` (111.22.333.444)
+- `DEPLOY_SSH_PRIVATE_KEY` (---BEGIN ... END---)
+- `DEPLOY_USER` (github_agent)
 
 ## File Tree
 
