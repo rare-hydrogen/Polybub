@@ -59,12 +59,14 @@ To run the project with all features locally, you need to do a few things:
 
 To run your web app on a remote server, you need to handle the same things you did to get it running locally (`database, code, secrets, certs`), before running it on a remote machine.
 
-I've provided an example `setup.bash` you need to run as root before using `deploy.yml` to build the project and deploy it remotely via Github Actions. That script needs the following secrets:
+I've provided an example `setup.bash` you need to run as root before using `deploy.yml` to build the project and deploy it remotely via Github Actions. That yml script needs the following secrets:
 
 - `CONFIG` (your json file)
 - `DEPLOY_HOST` (111.22.333.444)
 - `DEPLOY_SSH_PRIVATE_KEY` (---BEGIN ... END---)
 - `DEPLOY_USER` (github_agent)
+
+In addition, you may need to run some of the "Other Useful Commands" below to finish setting up your env, if you forget to change the variables in `setup.bash` and you'll need to apply schema and add data too.
 
 ## File Tree
 
@@ -106,3 +108,40 @@ TODO: add this section
 ### Add a Unit Test
 
 TODO: add this section
+
+## Other useful commands:
+
+The following are commands that may need to be run manually from time-to-time.
+
+# Run setup on remote target, without copying the file to the target
+
+`ssh droplet1 'bash -s' < ./setup.bash`
+
+# Create SSH key for github_agent, to be used in the setup script
+
+`ssh-keygen -t rsa -b 4096`
+
+# Create cert for server with a passphrase
+
+`openssl genrsa -out private.pem 4096`
+
+# Create the pepper, don't forget to add to config.json
+
+`openssl rand -base64 32`
+
+# Setup mount to view server files
+
+`sshfs droplet1:/var/www/app/Polybub ~/Remote/mount`
+
+# Remove mount
+
+`umount ~/Remote/mount`
+
+# Start / Stop the app service
+
+`sudo systemctl restart Polybub.service`
+`sudo systemctl stop Polybub.service`
+
+# read logs from the server
+
+`journalctl -u Polybub.service --since="15 min ago"`

@@ -29,7 +29,7 @@ func main() {
 
 	if Utilities.GlobalConfig.Env == "development" {
 		Swagger.Setup(Utilities.GlobalConfig, baseUrl, mux)
-		http.ListenAndServe(":8090", handler)
+		http.ListenAndServe(":"+Utilities.GlobalConfig.Port, handler)
 	}
 
 	if Utilities.GlobalConfig.Env == "production" {
@@ -39,7 +39,7 @@ func main() {
 			//keyFile := "./.certs/myserver.key"
 			//http.ListenAndServeTLS(":8090", certFile, keyFile, handler)
 		} else {
-			http.ListenAndServe(":8090", handler)
+			http.ListenAndServe(":"+Utilities.GlobalConfig.Port, handler)
 		}
 	}
 }
