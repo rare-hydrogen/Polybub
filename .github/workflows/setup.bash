@@ -47,7 +47,7 @@ echo 'github_agent ALL=(root) NOPASSWD: \
   /bin/systemctl stop Polybub, \
   /bin/systemctl reset-failed Polybub, \
   /bin/systemctl daemon-reload, \
-  /usr/bin/systemd-run --unit=Polybub --property=User=github_agent --property=ReadWritePaths=/var/www/app/Polybub/.db /var/www/app/Polybub/Polybub
+  /usr/bin/systemd-run --unit=golang-web-app --property=User=github_agent --property=AmbientCapabilities=CAP_NET_BIND_SERVICE --property=ReadWritePaths=/var/www/app/golang-web-app/.db /var/www/app/golang-web-app/golang-web-app
   ' | sudo tee /etc/sudoers.d/polybub-deploy
 
 echo "added password-less sudo"
@@ -66,3 +66,13 @@ echo "added placeholder paths and files"
 sudo chown github_agent:github_agent /var/www/app/Polybub -R
 
 echo "updated ownership"
+
+# Then, add fail2ban and lock-down users to reduce attacks
+sudo apt install fail2ban -y
+
+sudo tee /etc/ssh/sshd_config.d/99-hardening.conf >/dev/null <<'EOF'
+PasswordAuthentication no
+PermitRootLogin no
+EOF
+
+echo "installed and started fail2ban and locked down users"

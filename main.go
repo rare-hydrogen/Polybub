@@ -34,10 +34,9 @@ func main() {
 
 	if Utilities.GlobalConfig.Env == "production" {
 		if Utilities.GlobalConfig.IsSecure {
-			// TODO: Handle HTTPS
-			//certFile := "./.certs/fullchain.pem"
-			//keyFile := "./.certs/myserver.key"
-			//http.ListenAndServeTLS(":8090", certFile, keyFile, handler)
+			certFile := Utilities.GlobalConfig.CertPath + "tls.pem"
+			keyFile := Utilities.GlobalConfig.CertPath + "tls.key"
+			http.ListenAndServeTLS(":"+Utilities.GlobalConfig.Port, certFile, keyFile, handler)
 		} else {
 			http.ListenAndServe(":"+Utilities.GlobalConfig.Port, handler)
 		}

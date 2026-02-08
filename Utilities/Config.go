@@ -59,7 +59,7 @@ func GetBaseUrl(config Config) string {
 
 func GetDomain(config Config) string {
 	if config.Env == "production" {
-		return config.Domain
+		return config.Domain + config.TopDomain
 	} else {
 		return "localhost"
 	}

@@ -66,7 +66,12 @@ I've provided an example `setup.bash` you need to run as root before using `depl
 - `DEPLOY_SSH_PRIVATE_KEY` (---BEGIN ... END---)
 - `DEPLOY_USER` (github_agent)
 
-In addition, you may need to run some of the "Other Useful Commands" below to finish setting up your env, if you forget to change the variables in `setup.bash` and you'll need to apply schema and add data too.
+If you want TLS/SSL (HTTPS) you'll need to change `is-secure:true` and `port:443` in the config.json file AND generate the following files and add them to `.certs` folder on your remote server:
+
+- `tls.pem`
+- `tls.key`
+
+In addition, you may need to run some of the "Other Useful Commands" below to finish setting up your env. For example, if you forgot to change the variables in `setup.bash` those commands will help you fix your server. Regardless, you'll also need to apply schema and add data too to use the app.
 
 ## File Tree
 
