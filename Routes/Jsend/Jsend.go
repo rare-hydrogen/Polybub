@@ -1,6 +1,7 @@
 package Jsend
 
 import (
+	"Polybub/Utilities"
 	"Polybub/Utilities/Logger/WriteLogger"
 	"context"
 	"encoding/json"
@@ -101,10 +102,17 @@ func Error(ctx context.Context, w http.ResponseWriter, err error, publicMessage 
 	return Write(w, NewError(publicMessage, 0, nil), statuses...)
 }
 
-// Redirect a string url back to the client
-func Redirect(ctx context.Context, w http.ResponseWriter, url string, statuses ...int) {
-	WriteLogger.WriteLogger(ctx, "Redirect", statuses...)
-	WritePlain(w, url, statuses...)
+// Success writes successful body with the given data.
+func SuccessRedirect(ctx context.Context, w http.ResponseWriter, data interface{}, url string, statuses ...int) {
+	redirectURL := Utilities.GetBaseUrl(Utilities.GlobalConfig) + "/" + url
+	sm := `<script>PopToast("Success, Redirecting...", "toast notification is-primary"); `
+	tm := `setTimeout(() => {window.location.href = '` + redirectURL + `';}, 1000);</script>`
+	js := sm + tm
+
+	// Note: fails to redirect with: 'hx-swap=none'
+	WriteLogger.WriteLogger(ctx, "Success, Redirecting...", statuses...)
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, js)
 }
 
 // Success writes successful body with the given data.

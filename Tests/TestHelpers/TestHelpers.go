@@ -43,6 +43,7 @@ func UniqueTestConfig() Utilities.Config {
 	return Utilities.Config{
 		Env:        "development",
 		Connection: db,
+		CertPath:   "./.certs/",
 		Pepper:     "+1ItkRehw/2xPXW0jd8a040QLnROEoZKYFtD4hN2c5U=", // fake
 		Port:       "8080",
 		Domain:     "polybub",
