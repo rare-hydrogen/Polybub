@@ -23,19 +23,22 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 		patchFooBar(w, req)
 	case http.MethodDelete:
 		deleteFooBar(w, req)
+	default:
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
 func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.Error(req.Context(), w, err, "missing id", http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.ReadSingleFooBar(req.Context(), int32(id))
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.Error(req.Context(), w, err, "not found", http.StatusNotFound)
 		return
 	}
 
@@ -45,7 +48,7 @@ func getSingleFooBar(w http.ResponseWriter, req *http.Request) {
 func getManyFooBar(w http.ResponseWriter, req *http.Request) {
 	d, err := Services.ReadManyFooBar(req.Context())
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
@@ -57,13 +60,13 @@ func postFooBar(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "invalid request", http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.CreateFooBar(req.Context(), dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.Error(req.Context(), w, err, "create failed", http.StatusBadRequest)
 		return
 	}
 
@@ -75,13 +78,13 @@ func patchFooBar(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "update failed", http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.UpdateFooBar(req.Context(), dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), http.StatusInternalServerError)
+		Jsend.Error(req.Context(), w, err, "update failed", http.StatusBadRequest)
 		return
 	}
 
@@ -91,13 +94,13 @@ func patchFooBar(w http.ResponseWriter, req *http.Request) {
 func deleteFooBar(w http.ResponseWriter, req *http.Request) {
 	id, err := strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.Error(req.Context(), w, err, "missing id", http.StatusBadRequest)
 		return
 	}
 
 	err = Services.SoftDeleteFooBar(req.Context(), int32(id))
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error())
+		Jsend.Error(req.Context(), w, err, "delete failed", http.StatusBadRequest)
 		return
 	}
 

@@ -19,7 +19,8 @@ func FooBarHandler(w http.ResponseWriter, req *http.Request) {
 	case "POST":
 		postFooBar(w, req)
 	default:
-		Jsend.Error(req.Context(), w, "not allowed", http.StatusMethodNotAllowed)
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
@@ -38,7 +39,7 @@ func getFooBar(w http.ResponseWriter, req *http.Request) {
 
 	htmlText, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "error reading template", http.StatusBadRequest)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 	Jsend.Ui(req.Context(), w, htmlText)
@@ -47,25 +48,25 @@ func getFooBar(w http.ResponseWriter, req *http.Request) {
 func postFooBar(w http.ResponseWriter, req *http.Request) {
 	buf, err := io.ReadAll(req.Body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Something went wrong!", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	var dto Models.FooBar
 	err = json.Unmarshal(buf, &dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "missing or invalid data", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "missing or invalid data", http.StatusBadRequest)
 		return
 	}
 	err = Validators.FooBar(dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	obj, err := Services.CreateFooBar(req.Context(), dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Something went wrong.", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 

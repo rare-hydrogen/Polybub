@@ -6,7 +6,10 @@
             "name": "Launch file",
             "request": "launch",
             "mode": "debug",
-            "program": "./main.go"
+            "program": "./main.go",
+            "env": {
+                "CGO_ENABLED": "1"
+            }
         }
     ]
 }

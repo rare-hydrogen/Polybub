@@ -4,6 +4,7 @@ import (
 	"Polybub/Utilities/Logger/WriteLogger"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -84,30 +85,20 @@ func WritePlain(w http.ResponseWriter, body string, statuses ...int) {
 	w.Write(b)
 }
 
+func MethodNotAllowed(w http.ResponseWriter, req *http.Request) {
+	Error(req.Context(), w, errors.New("method not allowed"), "method not allowed", http.StatusMethodNotAllowed)
+}
+
+func InternalServerError(w http.ResponseWriter, req *http.Request, err error) {
+	Error(req.Context(), w, err, "something went wrong", http.StatusInternalServerError)
+}
+
 // JSENDERS
 
-// Error writes error body with the given message.
-func Error(ctx context.Context, w http.ResponseWriter, message string, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, "Error", statuses...)
-	return Write(w, NewError(message, 0, nil), statuses...)
-}
-
-// ErrorCode writes error body with the given message and code.
-func ErrorCode(ctx context.Context, w http.ResponseWriter, message string, code int, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, "ErrorCode", statuses...)
-	return Write(w, NewError(message, code, nil), statuses...)
-}
-
-// ErrorCodeData writes error body with the given message, code and data.
-func ErrorCodeData(ctx context.Context, w http.ResponseWriter, message string, code int, data interface{}, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, "ErrorCodeData", statuses...)
-	return Write(w, NewError(message, code, data), statuses...)
-}
-
-// Fail writes failed body with the given data.
-func Fail(ctx context.Context, w http.ResponseWriter, data interface{}, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, "Fail", statuses...)
-	return Write(w, NewFail(data), statuses...)
+// Error logs the real error and returns a given error message to the client
+func Error(ctx context.Context, w http.ResponseWriter, err error, publicMessage string, statuses ...int) error {
+	WriteLogger.WriteLogger(ctx, err.Error(), statuses...)
+	return Write(w, NewError(publicMessage, 0, nil), statuses...)
 }
 
 // Redirect a string url back to the client

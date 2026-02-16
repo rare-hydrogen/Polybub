@@ -8,8 +8,12 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == "GET" {
+	switch req.Method {
+	case "GET":
 		getLogin(w, req)
+	default:
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
@@ -18,13 +22,13 @@ func getLogin(w http.ResponseWriter, req *http.Request) {
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 

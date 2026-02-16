@@ -15,7 +15,7 @@ func ValdiateMfaHandler(w http.ResponseWriter, req *http.Request) {
 	case http.MethodPut:
 		putValdiateMfa(w, req)
 	default:
-		Jsend.Error(req.Context(), w, "Method not allowed", http.StatusMethodNotAllowed)
+		Jsend.MethodNotAllowed(w, req)
 		return
 	}
 }
@@ -23,7 +23,7 @@ func ValdiateMfaHandler(w http.ResponseWriter, req *http.Request) {
 func postValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_R, nil)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), status)
+		Jsend.Error(req.Context(), w, err, err.Error(), status)
 		return
 	}
 
@@ -31,20 +31,20 @@ func postValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	code := req.Header.Get("Code")
 	mfaTokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "login failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "login failed", http.StatusBadRequest)
 		return
 	}
 
 	claims, err := OAuth2.GetClaimsFromTokenString(mfaTokenString)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "login failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "login failed", http.StatusBadRequest)
 		return
 	}
 	userId := claims.Subject
 
 	_, tokenString, err := Services.MfaLogin(req.Context(), userId, code)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "login failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "login failed", http.StatusBadRequest)
 		return
 	}
 
@@ -54,7 +54,7 @@ func postValdiateMfa(w http.ResponseWriter, req *http.Request) {
 func putValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.MFA_CODE_CRU, nil)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err.Error(), status)
+		Jsend.Error(req.Context(), w, err, err.Error(), status)
 		return
 	}
 
@@ -63,20 +63,20 @@ func putValdiateMfa(w http.ResponseWriter, req *http.Request) {
 	key := req.Header.Get("Key")
 	mfaTokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "verification failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "verification failed", http.StatusBadRequest)
 		return
 	}
 
 	claims, err := OAuth2.GetClaimsFromTokenString(mfaTokenString)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "verification failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "verification failed", http.StatusBadRequest)
 		return
 	}
 	userId := claims.Subject
 
 	_, _, err = Services.MfaUpdate(req.Context(), userId, key, code)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "verification failed", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "verification failed", http.StatusBadRequest)
 		return
 	}
 

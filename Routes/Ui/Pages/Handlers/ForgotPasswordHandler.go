@@ -8,7 +8,8 @@ import (
 )
 
 func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == "GET" {
+	switch req.Method {
+	case "GET":
 		if req.URL.Query().Has("confirm") {
 			getForgotPasswordConfirm(w, req)
 		} else if req.URL.Query().Has("key") {
@@ -16,6 +17,9 @@ func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
 		} else {
 			getForgotPassword(w, req)
 		}
+	default:
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
@@ -24,13 +28,13 @@ func getForgotPassword(w http.ResponseWriter, req *http.Request) {
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
@@ -42,13 +46,13 @@ func getForgotPasswordConfirm(w http.ResponseWriter, req *http.Request) {
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
@@ -60,13 +64,13 @@ func getForgotPasswordAttempt(w http.ResponseWriter, req *http.Request) {
 	data := ""
 	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetPublicTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 

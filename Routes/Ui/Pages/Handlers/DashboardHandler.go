@@ -14,8 +14,12 @@ type dddd struct {
 }
 
 func DashboardHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == "GET" {
+	switch req.Method {
+	case "GET":
 		getDashboard(w, req)
+	default:
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
@@ -23,13 +27,13 @@ func getDashboard(w http.ResponseWriter, req *http.Request) {
 	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/dashboard.html")
 	tokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading token", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	claims, err := OAuth2.GetClaimsFromTokenString(tokenString)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading token", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
@@ -39,13 +43,13 @@ func getDashboard(w http.ResponseWriter, req *http.Request) {
 
 	body, err := GlobalWrapper.GetSafeHtml(b, data)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 

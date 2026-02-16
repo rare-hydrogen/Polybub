@@ -4,4 +4,4 @@ INSERT INTO Users (FirstName,LastName,Username,Password,Salt,AccountEmail,Accoun
 INSERT INTO Permissions (UserId,Name,IsCreate,IsRead,IsUpdate,IsDelete,CreatedAt,UpdatedAt,DeletedAt,CreatedBy,UpdatedBy,DeletedBy) VALUES
 	 (1,'Dashboard',1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL),
 	 (1,'MfaCode',1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL),
-	 (1,'Users',1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL),
+	 (1,'Users',1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL);

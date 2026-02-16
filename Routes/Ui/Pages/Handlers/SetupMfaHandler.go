@@ -18,12 +18,16 @@ type variantMfaData struct {
 }
 
 func SetupMfaHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == "GET" {
+	switch req.Method {
+	case "GET":
 		if req.URL.Query().Has("form") {
 			getSetupMfaForm(w, req)
 		} else {
 			getSetupMfa(w, req)
 		}
+	default:
+		Jsend.MethodNotAllowed(w, req)
+		return
 	}
 }
 
@@ -60,20 +64,20 @@ func getVariantMfaData(req *http.Request) (variantMfaData, error) {
 func getSetupMfa(w http.ResponseWriter, req *http.Request) {
 	v, err := getVariantMfaData(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading cookies", http.StatusBadRequest)
+		Jsend.Error(req.Context(), w, err, "invalid cookies", http.StatusBadRequest)
 		return
 	}
 
 	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/setup-mfa.html")
 	body, err := GlobalWrapper.GetSafeHtml(b, v)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	parsedHtml, err := GlobalWrapper.GetWrappedTemplate(body)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error wrapping template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
@@ -83,14 +87,14 @@ func getSetupMfa(w http.ResponseWriter, req *http.Request) {
 func getSetupMfaForm(w http.ResponseWriter, req *http.Request) {
 	v, err := getVariantMfaData(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading cookies", http.StatusBadRequest)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
 	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/send-code-to-check.html")
 	body, err := GlobalWrapper.GetSafeHtml(b, v)
 	if err != nil {
-		Jsend.Error(req.Context(), w, "Error reading template", http.StatusInternalServerError)
+		Jsend.InternalServerError(w, req, err)
 		return
 	}
 
