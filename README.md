@@ -104,7 +104,13 @@ TODO: add this section
 
 ### Add a HTML Page or Component
 
-TODO: add this section
+**Pages:**
+
+To add a new page, go to `PageHandlers.go` and add a simple get handler for your new page. Also, put a new `page.name.html` file into the PageTemplates folder. In that HTML file, define the layout and what components will be included using html/template {{ template "comp.name" }} to reference what you want. Pages should not need much data (app name / user details), but if they do, pass that data into the template `top-down`. Pages (mostly) wrap components in <body> tag.
+
+**Components:**
+
+To add a new component, you'll want to create a new `NameHandler.go` file under ComponentHandlers. You'll also want to add a new `comp.name.html` file into the ComponentTemplates folder. In that HTML file, use {{ define "comp.name" }} to create the template you want to reference in your page. Lastly, to hydrate your component with data, DO NOT pass data into the template. Just use HTMX to call the get endpoint for your component, and lazy load it. This allows for a `bottom-up` data flow for components. Components (mostly) begin with a <section> tag.
 
 ### Add an Endpoint
 
@@ -118,35 +124,35 @@ TODO: add this section
 
 The following are commands that may need to be run manually from time-to-time.
 
-# Run setup on remote target, without copying the file to the target
+### Run setup on remote target, without copying the file to the target
 
 `ssh droplet1 'bash -s' < ./setup.bash`
 
-# Create SSH key for github_agent, to be used in the setup script
+### Create SSH key for github_agent, to be used in the setup script
 
 `ssh-keygen -t rsa -b 4096`
 
-# Create cert for server with a passphrase
+### Create cert for server with a passphrase
 
 `openssl genrsa -out private.pem 4096`
 
-# Create the pepper, don't forget to add to config.json
+### Create the pepper, don't forget to add to config.json
 
 `openssl rand -base64 32`
 
-# Setup mount to view server files
+### Setup mount to view server files
 
 `sshfs droplet1:/var/www/app/Polybub ~/Remote/mount`
 
-# Remove mount
+### Remove mount
 
 `umount ~/Remote/mount`
 
-# Start / Stop the app service
+### Start / Stop the app service
 
 `sudo systemctl restart Polybub.service`
 `sudo systemctl stop Polybub.service`
 
-# read logs from the server
+### read logs from the server
 
 `journalctl -u Polybub.service --since="15 min ago"`

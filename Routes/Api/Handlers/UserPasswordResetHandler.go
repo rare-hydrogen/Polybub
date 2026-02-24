@@ -25,7 +25,7 @@ func UserPasswordResetHandler(w http.ResponseWriter, req *http.Request) {
 func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	givenEmail := req.Header.Get("email")
 	if givenEmail == "" {
-		Jsend.Error(req.Context(), w, errors.New("invalid email"), "invalid email.", http.StatusBadRequest)
+		Jsend.Error(w, req, errors.New("invalid email"), "invalid email.", http.StatusBadRequest)
 		return
 	}
 
@@ -38,7 +38,7 @@ func postUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	Jsend.Success(req.Context(), w, nil)
+	Jsend.Success(w, req, nil)
 	OAuth2.DeleteTokenAndRedirect(w, "/forgot-password?confirm")
 }
 
@@ -46,7 +46,7 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	queryId := req.Header.Get("id")
 	givenUserId, err := strconv.Atoi(queryId)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, "invalid request", http.StatusBadRequest)
+		Jsend.Error(w, req, err, "invalid request", http.StatusBadRequest)
 		return
 	}
 
@@ -56,7 +56,7 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 
 	err = Validators.UserPassword(newPassword, checkPassword)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, req, err, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -67,7 +67,7 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if givenKey != actualKey {
-		Jsend.Error(req.Context(), w, err, "invalid or expired key.", http.StatusBadRequest)
+		Jsend.Error(w, req, err, "invalid or expired key.", http.StatusBadRequest)
 		return
 	}
 
@@ -83,6 +83,6 @@ func putUserPasswordReset(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	Jsend.Success(req.Context(), w, nil)
+	Jsend.Success(w, req, nil)
 	OAuth2.DeleteTokenAndRedirect(w, "/login")
 }

@@ -52,6 +52,11 @@ function SetErrorFields(message) {
 // Handle each type of response
 function ResponseToHighlightAndNotif(event) {
   // Only toast for json responses
+  const contentType = event.detail.xhr.getResponseHeader("Content-Type");
+  if (contentType && contentType.includes("text/html")) {
+    return;
+  }
+
   if (event.detail.xhr.responseText[0] == "<") {
     return;
   }

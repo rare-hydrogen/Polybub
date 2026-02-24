@@ -1,4 +1,4 @@
-package Handlers
+package ComponentHandlers
 
 import (
 	"Polybub/Auth/OAuth2"
@@ -6,8 +6,7 @@ import (
 	"Polybub/Data/Services"
 	"Polybub/Data/Validators"
 	"Polybub/Routes/Jsend"
-	"Polybub/Routes/Ui/TemplateEmbeds"
-	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
+	"Polybub/Routes/Ui/Wrappers"
 	"Polybub/Utilities/Permissions"
 	"encoding/json"
 	"net/http"
@@ -31,27 +30,14 @@ func CreateUserHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func getCreateUser(w http.ResponseWriter, req *http.Request) {
-	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/create-user.html")
 	data := ""
-	body, err := GlobalWrapper.GetSafeHtml(b, data)
-	if err != nil {
-		Jsend.InternalServerError(w, req, err)
-		return
-	}
-
-	wrappedBody, err := GlobalWrapper.GetWrappedTemplate(body)
-	if err != nil {
-		Jsend.InternalServerError(w, req, err)
-		return
-	}
-
-	Jsend.Ui(req.Context(), w, wrappedBody, http.StatusOK)
+	Wrappers.TemplateHandler(w, req, "comp.create-user", data)
 }
 
 func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	status, err := OAuth2.JwtPermitRequest(req, Permissions.USERS_CRUD, nil)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, err.Error(), status)
+		Jsend.Error(w, req, err, err.Error(), status)
 		return
 	}
 
@@ -59,38 +45,38 @@ func postCreateUser(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err = decoder.Decode(&dto)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, req, err, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = Validators.User(dto.User)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, req, err, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if dto.Password != dto.CheckPassword {
-		Jsend.Error(req.Context(), w, err, "passwords must match", http.StatusBadRequest)
+		Jsend.Error(w, req, err, "passwords must match", http.StatusBadRequest)
 		return
 	}
 
 	d, err := Services.CreateUser(req.Context(), dto.User)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, err.Error(), http.StatusBadRequest)
+		Jsend.Error(w, req, err, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = Services.CreateDefaultPermissions(req.Context(), d.Id)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, "adding default permissions failed", http.StatusInternalServerError)
+		Jsend.Error(w, req, err, "adding default permissions failed", http.StatusInternalServerError)
 		return
 	}
 
 	err = Services.UpdatePasswordAndSalt(req.Context(), d.Id, dto.Password)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, "invalid password", http.StatusBadRequest)
+		Jsend.Error(w, req, err, "invalid password", http.StatusBadRequest)
 		return
 	}
 
-	Jsend.Success(req.Context(), w, d)
+	Jsend.Success(w, req, d)
 }

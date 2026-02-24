@@ -1,4 +1,4 @@
 package UserGroups
 
-const InternalUsers int32 = 1
-const ExternalUsers int32 = 2
+var InternalUsers int32 = 1
+var ExternalUsers int32 = 2

@@ -70,7 +70,7 @@ func ApplySchema() {
 }
 
 func TestHandler(w http.ResponseWriter, req *http.Request) {
-	Jsend.Success(req.Context(), w, nil, http.StatusOK)
+	Jsend.Success(w, req, nil, http.StatusOK)
 }
 
 func TestReqContext(rdv Logger.RequestDetails) context.Context {

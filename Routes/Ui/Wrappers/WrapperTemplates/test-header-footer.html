@@ -1,11 +1,13 @@
+{{ define "header" }}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{.Title}}</title>
-  <link rel="icon" type="image/x-icon" href="/static/Polybub.png" />
+  <title></title>
+  <link rel="icon" type="image/x-icon" href="/static/polybub.png" />
   <script src="/static/htmx.min.js"></script>
   <script src="/static/json-enc.js"></script>
   <script src="/static/toast.js"></script>
@@ -14,8 +16,10 @@
   <link rel="stylesheet" href="/static/toast.css" />
 </head>
 
-<body>
-  {{.Body}}
-</body>
+{{ end }}
+
+{{ define "footer" }}
 
 </html>
+
+{{ end }}

@@ -52,6 +52,20 @@ func GetClaimsFromTokenString(tokenString string) (Claims, error) {
 	return c, nil
 }
 
+func GetClaimsFromRequest(w http.ResponseWriter, req *http.Request) (Claims, error) {
+	tokenString, err := GetTokenStringFromHeader(req)
+	if err != nil {
+		return Claims{}, err
+	}
+
+	claims, err := GetClaimsFromTokenString(tokenString)
+	if err != nil {
+		return Claims{}, err
+	}
+
+	return claims, nil
+}
+
 func StoreTokenAndRedirect(w http.ResponseWriter, tokenString string, page string) {
 	redirectURL := Utilities.GetBaseUrl(Utilities.GlobalConfig) + "/" + page
 

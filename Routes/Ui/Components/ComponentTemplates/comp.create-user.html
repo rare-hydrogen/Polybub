@@ -1,10 +1,12 @@
-<body>
+{{ define "comp.create-user" }}
+
+<section>
   <article class="container bd-tw">
     <div class="content">
       <h2>Create User</h2>
       <p>Not every user has permissions to use this form.</p>
     </div>
-    <form hx-post="/create-user" hx-ext="json-enc" hx-swap="none">
+    <form hx-post="/comp/create-user" hx-ext="json-enc" hx-swap="none">
       <div class="field" style="max-width: 50%">
         <input type="text" name="FirstName" value="" placeholder="First Name" class="input" />
         <input type="text" name="LastName" value="" placeholder="Last Name" class="input" />
@@ -19,7 +21,7 @@
     </form>
     </div>
   </article>
-</body>
+</section>
 
 <style>
   .bd-tw {
@@ -31,3 +33,4 @@
     text-align: left;
   }
 </style>
+{{ end }}

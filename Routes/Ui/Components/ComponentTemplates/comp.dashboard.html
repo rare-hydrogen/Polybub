@@ -1,0 +1,29 @@
+{{ define "comp.dashboard" }}
+<section class="hero">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <article class="bd-tw">
+                    <h1 class="title is-1">Hello there...</h1>
+                    <h2 class="subtitle is-3">{{.Name}}</h2>
+                    <p>This is a demo site that shows some simple data storage and account features. Enjoy!</p>
+                </article>
+                <br>
+                <br>
+                <div hx-get="/comp/foobar" hx-swap="outerHTML" hx-target="this" hx-trigger="load">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .bd-tw {
+        background-color: var(--bulma-scheme-main-bis);
+        border-radius: var(--bulma-radius-large);
+        flex-shrink: 0;
+        font-size: 1em;
+        padding: 1.25em;
+        text-align: left;
+    }
+</style>
+{{ end }}

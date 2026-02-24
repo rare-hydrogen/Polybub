@@ -1,7 +1,7 @@
 package GlobalWrapper
 
 import (
-	"Polybub/Routes/Ui/TemplateEmbeds"
+	"Polybub/Routes/Ui/Wrappers/WrapperTemplates"
 	"Polybub/Utilities"
 	"bytes"
 	"html/template"
@@ -28,7 +28,7 @@ func GetSafeHtml(b []byte, data any) (string, error) {
 
 func GetWrappedTemplate(safeHtml string) (string, error) {
 	temp := template.New("")
-	wrappedBytes, _ := TemplateEmbeds.WrapperEmbeds.ReadFile("WrapperEmbeds/private.html")
+	wrappedBytes, _ := WrapperTemplates.GetTemplate("private.html")
 	wrap, err := temp.Parse(string(template.HTML(wrappedBytes)))
 	if err != nil {
 		return "", err
@@ -47,7 +47,7 @@ func GetWrappedTemplate(safeHtml string) (string, error) {
 
 func GetPublicTemplate(safeHtml string) (string, error) {
 	temp := template.New("")
-	wrappedBytes, _ := TemplateEmbeds.WrapperEmbeds.ReadFile("WrapperEmbeds/global.html")
+	wrappedBytes, _ := WrapperTemplates.GetTemplate("global.html")
 	wrap, err := temp.Parse(string(template.HTML(wrappedBytes)))
 	if err != nil {
 		return "", err

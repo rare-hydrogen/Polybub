@@ -1,3 +1,4 @@
+{{ define "comp.setup-mfa" }}
 <section class="hero is-fullheight">
   <div class="hero-body">
     <div class="container is-max-tablet">
@@ -6,15 +7,11 @@
       <p> Key: <span id="key">{{.Key}}<span></p>
       <br />
       <div id="validate-button">
-      <a 
-        hx-get="/setup-mfa?form"
-        hx-swap="outerHTML"
-        hx-target="#validate-button"
-        class="button is-primary" 
-        href="/validate-mfa"
-      >Validate Key</a>
-      <a class="button is-secondary" href="/dashboard">Cancel</a>
+        <a hx-get="/comp/setup-mfa?form" hx-swap="outerHTML" hx-target="#validate-button" class="button is-primary"
+          href="/validate-mfa">Validate Key</a>
+        <a class="button is-secondary" href="/dashboard">Cancel</a>
       </div>
     </div>
   </div>
 </section>
+{{ end }}

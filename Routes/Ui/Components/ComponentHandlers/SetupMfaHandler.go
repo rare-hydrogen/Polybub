@@ -1,12 +1,11 @@
-package Handlers
+package ComponentHandlers
 
 import (
 	"Polybub/Auth/OAuth2"
 	"Polybub/Auth/Totp"
 	"Polybub/Data/Services"
 	"Polybub/Routes/Jsend"
-	"Polybub/Routes/Ui/TemplateEmbeds"
-	"Polybub/Routes/Ui/Wrappers/GlobalWrapper"
+	"Polybub/Routes/Ui/Wrappers"
 	"encoding/base64"
 	"html/template"
 	"net/http"
@@ -31,7 +30,7 @@ func SetupMfaHandler(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getVariantMfaData(req *http.Request) (variantMfaData, error) {
+func retrieveVariantMfaData(req *http.Request) (variantMfaData, error) {
 	// Get claims
 	tokenString, err := OAuth2.GetTokenStringFromHeader(req)
 	if err != nil {
@@ -62,41 +61,21 @@ func getVariantMfaData(req *http.Request) (variantMfaData, error) {
 }
 
 func getSetupMfa(w http.ResponseWriter, req *http.Request) {
-	v, err := getVariantMfaData(req)
+	v, err := retrieveVariantMfaData(req)
 	if err != nil {
-		Jsend.Error(req.Context(), w, err, "invalid cookies", http.StatusBadRequest)
+		Jsend.Error(w, req, err, "invalid cookies", http.StatusBadRequest)
 		return
 	}
 
-	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/setup-mfa.html")
-	body, err := GlobalWrapper.GetSafeHtml(b, v)
-	if err != nil {
-		Jsend.InternalServerError(w, req, err)
-		return
-	}
-
-	parsedHtml, err := GlobalWrapper.GetWrappedTemplate(body)
-	if err != nil {
-		Jsend.InternalServerError(w, req, err)
-		return
-	}
-
-	Jsend.Ui(req.Context(), w, parsedHtml)
+	Wrappers.TemplateHandler(w, req, "comp.setup-mfa", v)
 }
 
 func getSetupMfaForm(w http.ResponseWriter, req *http.Request) {
-	v, err := getVariantMfaData(req)
+	v, err := retrieveVariantMfaData(req)
 	if err != nil {
-		Jsend.InternalServerError(w, req, err)
+		Jsend.Error(w, req, err, "invalid cookies", http.StatusBadRequest)
 		return
 	}
 
-	b, _ := TemplateEmbeds.PageEmbeds.ReadFile("PageEmbeds/send-code-to-check.html")
-	body, err := GlobalWrapper.GetSafeHtml(b, v)
-	if err != nil {
-		Jsend.InternalServerError(w, req, err)
-		return
-	}
-
-	Jsend.Ui(req.Context(), w, body)
+	Wrappers.TemplateHandler(w, req, "comp.setup-mfa-form", v)
 }

@@ -47,7 +47,7 @@ echo 'github_agent ALL=(root) NOPASSWD: \
   /bin/systemctl stop Polybub, \
   /bin/systemctl reset-failed Polybub, \
   /bin/systemctl daemon-reload, \
-  /usr/bin/systemd-run --unit=golang-web-app --property=User=github_agent --property=AmbientCapabilities=CAP_NET_BIND_SERVICE --property=ReadWritePaths=/var/www/app/golang-web-app/.db /var/www/app/golang-web-app/golang-web-app
+  /usr/bin/systemd-run --unit=polybub --property=User=github_agent --property=AmbientCapabilities=CAP_NET_BIND_SERVICE --property=ReadWritePaths=/var/www/app/polybub/.db /var/www/app/polybub/polybub
   ' | sudo tee /etc/sudoers.d/polybub-deploy
 
 echo "added password-less sudo"

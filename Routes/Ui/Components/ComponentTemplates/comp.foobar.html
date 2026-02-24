@@ -1,4 +1,5 @@
-<div class="content">
+{{ define "comp.foobar" }}
+<section class="content">
   <article class="bd-tw">
     <h1>Create a FooBar</h1>
     <p>
@@ -30,7 +31,7 @@
       <a href="./dashboard" class="is-secondary button">Refresh</a>
     </div>
   </article>
-</div>
+</section>
 
 <style>
   .bd-tw {
@@ -47,3 +48,4 @@
     font-style: italic;
   }
 </style>
+{{ end }}

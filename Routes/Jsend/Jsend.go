@@ -3,7 +3,6 @@ package Jsend
 import (
 	"Polybub/Utilities"
 	"Polybub/Utilities/Logger/WriteLogger"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -73,9 +72,9 @@ func Write(w http.ResponseWriter, body Body, statuses ...int) error {
 	return err
 }
 
-// Pass plain text back to the client without json formatting
-func WritePlain(w http.ResponseWriter, body string, statuses ...int) {
-	w.Header().Set("Content-Type", "text/plain")
+// Pass plain HTML back to the client without json formatting
+func WriteHtml(w http.ResponseWriter, body string, statuses ...int) {
+	w.Header().Set("Content-Type", "text/html")
 
 	if len(statuses) > 0 {
 		w.WriteHeader(statuses[0])
@@ -87,41 +86,46 @@ func WritePlain(w http.ResponseWriter, body string, statuses ...int) {
 }
 
 func MethodNotAllowed(w http.ResponseWriter, req *http.Request) {
-	Error(req.Context(), w, errors.New("method not allowed"), "method not allowed", http.StatusMethodNotAllowed)
+	Error(w, req, errors.New("method not allowed"), "method not allowed", http.StatusMethodNotAllowed)
 }
 
 func InternalServerError(w http.ResponseWriter, req *http.Request, err error) {
-	Error(req.Context(), w, err, "something went wrong", http.StatusInternalServerError)
+	Error(w, req, err, "something went wrong", http.StatusInternalServerError)
 }
 
 // JSENDERS
 
 // Error logs the real error and returns a given error message to the client
-func Error(ctx context.Context, w http.ResponseWriter, err error, publicMessage string, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, err.Error(), statuses...)
+func Error(w http.ResponseWriter, req *http.Request, err error, publicMessage string, statuses ...int) error {
+	if err == nil {
+		WriteLogger.WriteLogger(req.Context(), "error was passed as nil", statuses...)
+		return Write(w, NewError(publicMessage, 0, nil), statuses...)
+	}
+
+	WriteLogger.WriteLogger(req.Context(), err.Error(), statuses...)
 	return Write(w, NewError(publicMessage, 0, nil), statuses...)
 }
 
 // Success writes successful body with the given data.
-func SuccessRedirect(ctx context.Context, w http.ResponseWriter, data interface{}, url string, statuses ...int) {
+func SuccessRedirect(w http.ResponseWriter, req *http.Request, data interface{}, url string, statuses ...int) {
 	redirectURL := Utilities.GetBaseUrl(Utilities.GlobalConfig) + "/" + url
 	sm := `<script>PopToast("Success, Redirecting...", "toast notification is-primary"); `
 	tm := `setTimeout(() => {window.location.href = '` + redirectURL + `';}, 1000);</script>`
 	js := sm + tm
 
 	// Note: fails to redirect with: 'hx-swap=none'
-	WriteLogger.WriteLogger(ctx, "Success, Redirecting...", statuses...)
+	WriteLogger.WriteLogger(req.Context(), "Success, Redirecting...", statuses...)
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprint(w, js)
 }
 
 // Success writes successful body with the given data.
-func Success(ctx context.Context, w http.ResponseWriter, data interface{}, statuses ...int) error {
-	WriteLogger.WriteLogger(ctx, "Success", statuses...)
+func Success(w http.ResponseWriter, req *http.Request, data interface{}, statuses ...int) error {
+	WriteLogger.WriteLogger(req.Context(), "Success", statuses...)
 	return Write(w, New(data), statuses...)
 }
 
-func Ui(ctx context.Context, w http.ResponseWriter, wrappedBody string, statuses ...int) {
-	WriteLogger.WriteLogger(ctx, "UI", statuses...)
-	fmt.Fprint(w, wrappedBody)
+func Ui(w http.ResponseWriter, req *http.Request, wrappedBody string, statuses ...int) {
+	WriteLogger.WriteLogger(req.Context(), "UI", statuses...)
+	WriteHtml(w, wrappedBody)
 }

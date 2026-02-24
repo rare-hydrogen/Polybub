@@ -2,11 +2,15 @@ package Components
 
 import (
 	"Polybub/Auth/OAuth2"
-	"Polybub/Routes/Ui/Components/Handlers"
+	"Polybub/Routes/Ui/Components/ComponentHandlers"
 	"Polybub/Utilities/Permissions"
 	"net/http"
 )
 
 func AddComponentRoutes(mux *http.ServeMux) {
-	OAuth2.JwtPermit(mux, "/comp/foobar", Handlers.FooBarHandler, Permissions.FOOBARS_CRUD, nil)
+	mux.HandleFunc("/comp/forgot-password", ComponentHandlers.ForgotPasswordHandler)
+	OAuth2.JwtPermit(mux, "/comp/setup-mfa", ComponentHandlers.SetupMfaHandler, Permissions.MFA_CODE_CRU, nil)
+	OAuth2.JwtPermit(mux, "/comp/validate-mfa", ComponentHandlers.ValidateMfaHandler, Permissions.MFA_CODE_R, nil)
+	OAuth2.JwtPermit(mux, "/comp/foobar", ComponentHandlers.FooBarHandler, Permissions.FOOBARS_CRUD, nil)
+	OAuth2.JwtPermit(mux, "/comp/create-user", ComponentHandlers.CreateUserHandler, Permissions.USERS_CRUD, nil)
 }

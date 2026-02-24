@@ -1,0 +1,11 @@
+{{ define "page.setup-mfa" }}
+{{ template "header" }}
+
+<body>
+  {{ template "wrapper.private" }}
+  <div hx-get="/comp/setup-mfa" hx-swap="outerHTML" hx-target="this" hx-trigger="load">
+  </div>
+</body>
+
+{{ template "footer" }}
+{{ end }}

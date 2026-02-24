@@ -1,0 +1,8 @@
+{{ define "wrapper.private" }}
+<div class="container level-right">
+  <a class="button level-item" href="/dashboard">Dashboard</a>
+  <a class="button level-item" href="/setup-mfa">Setup MFA</a>
+  <a class="button level-item" href="/create-user">Create User</a>
+  <button class="button level-item" hx-delete="/api/user-login">Logout</button>
+</div>
+{{ end }}

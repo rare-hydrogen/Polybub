@@ -3,7 +3,7 @@
   gap: 0.5rem;
   bottom: 1rem;
   right: 1rem;
-  position: absolute !important;
-  z-index: 1;
+  position: fixed !important;
+  z-index: 9999;
   min-width: 10rem;
 }
