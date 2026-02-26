@@ -34,7 +34,13 @@ func SetupMfaHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func ForgotPasswordHandler(w http.ResponseWriter, req *http.Request) {
-	Wrappers.TemplateHandler(w, req, "page.forgot-password", nil)
+	if req.URL.Query().Has("confirm") {
+		Wrappers.TemplateHandler(w, req, "page.forgot-password-confirm", nil)
+	} else if req.URL.Query().Has("key") {
+		Wrappers.TemplateHandler(w, req, "page.forgot-password-attempt", nil)
+	} else {
+		Wrappers.TemplateHandler(w, req, "page.forgot-password", nil)
+	}
 }
 
 func ValidateMfaHandler(w http.ResponseWriter, req *http.Request) {
