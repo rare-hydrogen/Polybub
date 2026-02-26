@@ -85,7 +85,7 @@ Here's a basic overview of where things belong in the project.
 │   ├── Api # Endpoints that return JSON
 │   ├── Jsend # Structured output for JSON
 │   ├── Ui # Endpoints and templates that return HTML
-├── Static # Public Files (minified CSS / JS)
+│   ├── Static # Public Files (minified CSS / JS)
 ├── Tests # Unit tests
 ├── Utilities # Logger, list of perms, SMTP, Swagger, Config parsing.
 ```
@@ -124,35 +124,59 @@ TODO: add this section
 
 The following are commands that may need to be run manually from time-to-time.
 
-### Run setup on remote target, without copying the file to the target
+#### Run setup on remote target, without copying the file to the target
 
-`ssh droplet1 'bash -s' < ./setup.bash`
+```bash
+ssh droplet1 'bash -s' < ./setup.bash`
+```
 
-### Create SSH key for github_agent, to be used in the setup script
+#### Create SSH key for github_agent, to be used in the setup script
 
-`ssh-keygen -t rsa -b 4096`
+```bash
+ssh-keygen -t rsa -b 4096
+```
 
-### Create cert for server with a passphrase
+#### Create cert for server with a passphrase
 
-`openssl genrsa -out private.pem 4096`
+```bash
+openssl genrsa -out private.pem 4096
+```
 
-### Create the pepper, don't forget to add to config.json
+#### Create the pepper, don't forget to add to config.json
 
-`openssl rand -base64 32`
+```bash
+openssl rand -base64 32
+```
 
-### Setup mount to view server files
+#### Setup mount to view server files
 
-`sshfs droplet1:/var/www/app/Polybub ~/Remote/mount`
+```bash
+sshfs droplet1:/var/www/app/Polybub ~/Remote/mount
+```
 
-### Remove mount
+#### Remove mount
 
-`umount ~/Remote/mount`
+```bash
+umount ~/Remote/mount
+```
 
-### Start / Stop the app service
+#### Start / Stop the app service
 
-`sudo systemctl restart Polybub.service`
-`sudo systemctl stop Polybub.service`
+```bash
+sudo systemctl restart Polybub.service
+sudo systemctl stop Polybub.service
+```
 
-### read logs from the server
+#### Read logs from the server
 
-`journalctl -u Polybub.service --since="15 min ago"`
+```bash
+journalctl -u Polybub.service --since="15 min ago"
+```
+
+## Turso Swap
+
+It is actually very easy to swap from embedded sqlite to turso instead. You only need to swap the data package's connection with the turso-friendly equivalent. Use this as your guide:
+https://github.com/ytsruh/gorm-libsql?tab=readme-ov-file#pure-go-usage
+
+I have not tried embedded sqlite with Turso. The fact that this works at all blows my mind. I essentially just replaced the existing sqlite connection with the one documented here. Very easy swap, in my opinion, especially since I already had the URL setup:
+`url := Utilities.GlobalConfig.TursoDatabaseUrl + "?authToken=" + Utilities.GlobalConfig.TursoAuthToken`
