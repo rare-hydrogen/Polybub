@@ -173,6 +173,12 @@ sudo systemctl stop Polybub.service
 journalctl -u Polybub.service --since="15 min ago"
 ```
 
+#### Complete WAL transaction to Sqlite
+
+```bash
+sqlite3 sqlitedb "PRAGMA wal_checkpoint(FULL);"
+```
+
 ## Turso Swap
 
 It is actually very easy to swap from embedded sqlite to turso instead. You only need to swap the data package's connection with the turso-friendly equivalent. Use this as your guide:
@@ -180,3 +186,34 @@ https://github.com/ytsruh/gorm-libsql?tab=readme-ov-file#pure-go-usage
 
 I have not tried embedded sqlite with Turso. The fact that this works at all blows my mind. I essentially just replaced the existing sqlite connection with the one documented here. Very easy swap, in my opinion, especially since I already had the URL setup:
 `url := Utilities.GlobalConfig.TursoDatabaseUrl + "?authToken=" + Utilities.GlobalConfig.TursoAuthToken`
+
+## Sqlite Upgrade and migrate procedure
+
+1. commit the code to main
+2. ssh into the DigitalOcean droplet
+3. stop the app with: `sudo systemctl stop Polybub.service`
+4. mount the filesystem `sshfs droplet1:/var/www/app/polybub ~/Remote/mount`
+5. connect the database via mount
+6. run `PRAGMA wal_checkpoint(FULL);` to stop all transactions
+7. apply migrations
+8. disconnect db
+9. unmount with `umount ~/Remote/mount`
+10. run workflow `deploy.yml`
+
+### If you get locked out of digital ocean
+
+I only include this here because it happened three times to me, so I got sick of forgetting how to break back in.
+
+1. reset root password
+2. login to recovery terminal
+3. add to top of /etc/ssh/ssh_config:
+   PasswordAuthentication no
+   PubkeyAuthentication yes
+4. delete files under /etc/ssh/ssh_config.d (99-hardening... etc)
+5. restart ssh `sudo systemctl restart ssh`
+6. try to login again
+
+### Other notes:
+
+Do not ever mount the filesystem while people are using it. Corruption! Instead use the prv-scripts to pull and push the db.
+WAL mode writes to the db ONLY every 1000 pages, which is a ton of edits. That's why it's important to manually close WAL mode before editing.
