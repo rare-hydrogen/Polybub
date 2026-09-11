@@ -7,7 +7,7 @@
     "domain": "asdf",
     "topDomain": ".com",
     "cookieName": "asdf",
-    "isSecure": true,
+    "isSecure": false,
     "apiTitle": "asdf",
     "apiVersion": "1.0.0",
     "sendgridName": "foobar",

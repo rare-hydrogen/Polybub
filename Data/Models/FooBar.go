@@ -9,14 +9,14 @@ import (
 	money "github.com/Rhymond/go-money"
 )
 
-const TableNameFooBar = "FooBar"
+const TableNameFooBar = "foobar"
 
 type FooBar struct {
-	Id       int32  `gorm:"column:Id;type:INTEGER;primaryKey;" json:"Id"`
-	Name     string `gorm:"column:Name;type:TEXT" json:"Name"`
-	Type     string `gorm:"column:Type;type:TEXT" json:"Type"`
-	Amount   int64  `gorm:"column:Amount;type:INTEGER;" json:"amount"`
-	Currency string `gorm:"column:Currency;type:TEXT;" json:"currency"`
+	Id       int32  `gorm:"column:id;type:INTEGER;primaryKey;" json:"Id"`
+	Name     string `gorm:"column:name;type:TEXT" json:"Name"`
+	Type     string `gorm:"column:type;type:TEXT" json:"Type"`
+	Amount   int64  `gorm:"column:amount;type:INTEGER;" json:"amount"`
+	Currency string `gorm:"column:currency;type:TEXT;" json:"currency"`
 	Audit.AuditFields
 }
 

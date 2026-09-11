@@ -1,84 +1,59 @@
 package Callbacks
 
 import (
+	"Polybub/Data/Audit"
 	"Polybub/Utilities/Logger"
-	"encoding/json"
-	"fmt"
-	"reflect"
-
-	"gorm.io/gorm"
+	"context"
+	"time"
 )
 
-func SetCallbacks(db *gorm.DB) {
-	db.Callback().Create().Before("gorm:create").Register("SetCreatedBy", setCreatedBy)
-	db.Callback().Update().Before("gorm:update").Register("SetUpdatedBy", setUpdatedBy)
-	db.Callback().Delete().Before("gorm:delete").Register("SetDeletedBy", setDeletedBy)
-}
+type AuditType int
 
-func setCreatedBy(db *gorm.DB) {
-	setByName(db, "Created")
-}
+const (
+	CREATE AuditType = iota
+	UPDATE
+	DELETE
+)
 
-func setUpdatedBy(db *gorm.DB) {
-	setByName(db, "Updated")
-}
-
-func setDeletedBy(db *gorm.DB) {
-	setByNameDeleted(db, "Deleted")
-}
-
-func checkByName(db *gorm.DB) string {
-	// Get name from Context
-	ctx := db.Statement.Context
+func AddAuditFields(ctx context.Context, auditType AuditType, af *Audit.AuditFields) {
+	// Get data used to fill audit fields
 	rdv := ctx.Value("requestDetails").(Logger.RequestDetails)
-	ByName := rdv.UserName
 
-	// Handle non-users
-	if ByName == "" {
-		ByName = "System"
+	// For the given field type, fill the data
+	if auditType == CREATE {
+		af.CreatedAt = time.Now()
+		af.CreatedBy = rdv.UserName
+		af.CreatedById = rdv.UserId
 	}
-
-	return ByName
-}
-
-func setByName(db *gorm.DB, CrudType string) {
-	ByName := checkByName(db)
-
-	if db.Statement.Schema == nil {
-		return
+	if auditType == UPDATE {
+		af.UpdatedAt = time.Now()
+		af.UpdatedBy = rdv.UserName
+		af.UpdatedById = rdv.UserId
 	}
-
-	switch db.Statement.ReflectValue.Kind() {
-	case reflect.Struct:
-		db.Statement.SetColumn(CrudType+"By", ByName)
+	if auditType == DELETE {
+		af.DeletedAt = time.Now()
+		af.DeletedBy = rdv.UserName
+		af.DeletedById = rdv.UserId
+		af.IsDeleted = 1
 	}
 }
 
-func setByNameDeleted(db *gorm.DB, CrudType string) {
-	ByName := checkByName(db)
-
-	tableName := db.Statement.Schema.Table
-	newStatement := fmt.Sprintf("UPDATE " + tableName + " SET DeletedBy = ? WHERE Id = ?")
-
-	dest, err := getIdFromDest(db.Statement.Dest)
-	if err != nil {
-		fmt.Printf("soft delete failed: " + err.Error())
-		return
+func AddSystemAuditFields(auditType AuditType, af *Audit.AuditFields) {
+	// For the given field type, fill the data
+	if auditType == CREATE {
+		af.CreatedAt = time.Now()
+		af.CreatedBy = "System"
+		af.CreatedById = 0
 	}
-
-	err = db.Exec(newStatement, ByName, dest).Error
-	if err != nil {
-		fmt.Printf("soft delete failed: " + err.Error())
-		return
+	if auditType == UPDATE {
+		af.UpdatedAt = time.Now()
+		af.UpdatedBy = "System"
+		af.UpdatedById = 0
 	}
-}
-
-func getIdFromDest(obj interface{}) (int32, error) {
-	b, _ := json.Marshal(obj)
-	var subset struct {
-		Id int
+	if auditType == DELETE {
+		af.DeletedAt = time.Now()
+		af.DeletedBy = "System"
+		af.DeletedById = 0
+		af.IsDeleted = 1
 	}
-	json.Unmarshal(b, &subset)
-
-	return int32(subset.Id), nil
 }

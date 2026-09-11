@@ -24,8 +24,8 @@ func AddResetKeyThenDeleteOthers(ctx context.Context, userId int32, givenEmail s
 	}
 
 	err = db.Model(&Models.UserPasswordReset{}).
-		Where("UserId = ?", userId).
-		Where("ResetKey IS NOT ?", data.ResetKey).
+		Where("user_id = ?", userId).
+		Where("reset_key IS NOT ?", data.ResetKey).
 		Delete(&Models.UserPasswordReset{}).
 		Error
 	if err != nil {
@@ -45,7 +45,7 @@ func GetResetKey(ctx context.Context, userId int32) (string, error) {
 
 	single := Models.UserPasswordReset{}
 	err := db.Model(&Models.UserPasswordReset{}).
-		Where("UserId = ?", userId).
+		Where("user_id = ?", userId).
 		First(&single).
 		Error
 	if err != nil {
@@ -59,7 +59,7 @@ func DeleteAllResetKeys(ctx context.Context, userId int32) error {
 	var db = Data.GetConnection().WithContext(ctx)
 
 	err := db.Model(&Models.UserPasswordReset{}).
-		Where("UserId = ?", userId).
+		Where("user_id = ?", userId).
 		Delete(&Models.UserPasswordReset{}).
 		Error
 	if err != nil {

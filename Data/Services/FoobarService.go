@@ -24,7 +24,7 @@ func ReadSingleFooBar(ctx context.Context, id int32) (Models.FooBar, error) {
 
 	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", id).
+		Where("id = ?", id).
 		First(&single).
 		Error
 	if err != nil {
@@ -65,7 +65,7 @@ func UpdateFooBar(ctx context.Context, data Models.FooBar) (Models.FooBar, error
 
 	single := Models.FooBar{}
 	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Updates(data).
 		First(&single).
 		Error
@@ -84,7 +84,7 @@ func SoftDeleteFooBar(ctx context.Context, id int32) error {
 	}
 
 	err := db.Model(&Models.FooBar{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Delete(&data).Error
 	if err != nil {
 		return err

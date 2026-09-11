@@ -48,7 +48,7 @@ func ReadSinglePermission(ctx context.Context, id int32) (Models.Permission, err
 
 	single := Models.Permission{}
 	err := db.Model(&Models.Permission{}).
-		Where("Id = ?", id).
+		Where("id = ?", id).
 		First(&single).
 		Error
 	if err != nil {
@@ -63,7 +63,7 @@ func ReadUsersPermissions(ctx context.Context, userId int32) ([]Models.Permissio
 
 	many := []Models.Permission{}
 	err := db.
-		Where("UserId = ?", userId).
+		Where("user_id = ?", userId).
 		Find(&many).Error
 	if err != nil {
 		return []Models.Permission{}, err
@@ -77,7 +77,7 @@ func UpdatePermission(ctx context.Context, data Models.Permission) (Models.Permi
 
 	single := Models.Permission{}
 	err := db.Model(&Models.Permission{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Updates(data).
 		First(&single).
 		Error
@@ -96,7 +96,7 @@ func SoftDeletePermission(ctx context.Context, id int32) error {
 	}
 
 	err := db.Model(&Models.Permission{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Delete(&data).Error
 	if err != nil {
 		return err

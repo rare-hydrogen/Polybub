@@ -41,7 +41,7 @@ func UniqueTestConfig() Utilities.Config {
 	db := "file:testdb" + uuid.NewString() + "?mode=memory&cache=shared"
 
 	return Utilities.Config{
-		Env:        "development",
+		Env:        "test",
 		Connection: db,
 		CertPath:   "./.certs/",
 		Pepper:     "+1ItkRehw/2xPXW0jd8a040QLnROEoZKYFtD4hN2c5U=", // fake

@@ -56,7 +56,7 @@ func ReadSingleUser(ctx context.Context, id int32) (userVariant, error) {
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("Id = ?", id).
+		Where("id = ?", id).
 		First(&single).
 		Error
 	if err != nil {
@@ -71,7 +71,7 @@ func GetIdByEmail(ctx context.Context, email string) (int32, error) {
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("AccountEmail = ?", email).
+		Where("account_email = ?", email).
 		First(&single).
 		Error
 	if err != nil {
@@ -86,7 +86,7 @@ func GetIdByUsername(ctx context.Context, username string) (int32, error) {
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("Username = ?", username).
+		Where("username = ?", username).
 		First(&single).
 		Error
 	if err != nil {
@@ -121,7 +121,7 @@ func UpdateUser(ctx context.Context, data Models.User) (userVariant, error) {
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Updates(data).
 		First(&single).
 		Error
@@ -140,7 +140,7 @@ func SoftDeleteUser(ctx context.Context, id int32) error {
 	}
 
 	err := db.Model(&Models.User{}).
-		Where("Id = ?", data.Id).
+		Where("id = ?", data.Id).
 		Delete(&data).Error
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func UnsafeReadSingleUser(ctx context.Context, id int32) (Models.User, error) {
 
 	single := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("Id = ?", id).
+		Where("id = ?", id).
 		First(&single).
 		Error
 	if err != nil {
@@ -170,7 +170,7 @@ func UnsafeGetUserByUsername(ctx context.Context, username string) (Models.User,
 
 	user := Models.User{}
 	err := db.Model(&Models.User{}).
-		Where("Username = ?", username).
+		Where("username = ?", username).
 		First(&user).
 		Error
 	if err != nil {

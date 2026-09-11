@@ -1,219 +1,80 @@
+<p align="center">
+  <br>
+  <br>
+  <a href="https://github.com/rare-hydrogen/Polybub" target="_blank" rel="noopener noreferrer">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./polybub.png">
+      <source media="(prefers-color-scheme: light)" srcset="./polybub.png">
+      <img alt="polybub logo" src="./polybub.png" height="60">
+    </picture>
+  </a>
+  <br>
+  <br>
+</p>
+<br/>
+
 # Polybub
 
-A template for building Ultralight Web Apps.
+> Ultralight backend and fronted template for web apps, built with:
 
-## What is Polybub
+- :hamster: Golang
+- :horse: HTMX
+- :dragon_face: Bulma
+- :thinking: GORM (Postgres or Sqlite)
 
-Polybub is a basic web app designed to be used as a template for creating efficient, scalable, low-dependency, CRUD-focused web apps within a `Golang + HTMX + Bulma + Sqlite` stack.
+Polybub is a web app template for creating efficient, scalable, low-dependency, CRUD-focused web apps with a simple, opinionated stack. All with only 15 modules, so say goodbye to dependency hell!
 
-If you've ever wanted to build something serious using these technologies, but didn't want to learn how to integrate them from scratch, this repo is for you.
+## Built-In Features:
 
-### Benefits
+1. :love_letter: User Management (Encryption + JWT + Resets + TOTP 2FA)
+2. :princess: Fine-Grained User Permissions
+3. :speak_no_evil: Audit Logs, Soft Deletes, No Nulls,
+4. :sunglasses: Swagger
+5. :page_with_curl: HTTP Request Logging with systemctl.
+6. :japanese_goblin: Unit, Integration, and End-to-End tests in one repo!
+7. :bread: Unified FE-BE validation and toast notifications.
 
-1. High-Performance.
-   - Embedded database.
-   - Frontend is almost entirely SSR.
-   - Build times are rapid thanks to Golang.
-2. Minimal dependencies.
-   - No NPM.
-   - Built-in, minified HTMX and Bulma.
-   - Few (15-ish) third-party Golang modules.
-3. Local-Friendly DX.
-   - Frontend, Backend, and Database all in one repo.
-   - Serve REST and UI from one HTTP server.
-   - Simple HTML templates, pipe data with [html/template](https://pkg.go.dev/html/template).
-4. Ready for Scale
-   - Go servers run great on cheap hardware.
-   - Scale vertically on a budget.
-   - Or, swap databases and scale horizontally.
+## Getting Started
 
-### Features
+To run Polybub locally:
 
-1. Elegant CSS (Bulma)
-2. Password Encryption (AES-256)
-3. Password Resets (Sendgrid)
-4. TOTP 2FA
-5. Audit logs
-6. Soft Deletes
-7. Swagger
-8. HTTP Request Logging.
-9. Unit tests.
-10. Fine-Grained user permissions.
-11. Internal / External audiences.
-12. Toast notifications in frontend.
+1. Clone the repo.
+2. Add your secrets to a `config.json` file. (see example_config.json)
+3. Add `private.pem` under `/.certs/` for encryption.
+4. Run `Data/Schema/schema.sql` on your database.
+5. Run `Data/Schema/create-admin.sql` on your database.
+6. Run `go mod tidy` to get the modules.
+7. Run `go run main.go` or `launch.json` file.
 
-## How to Get Started
-
-### Local
-
-To run the project with all features locally, you need to do a few things:
-
-1. Clone / Pull the repo.
-2. Add your secrets to a `Polybub/config.json` file (see example).
-3. Create a Sqlite db under `Polybub/.db/` and apply the `Polybub/Data/Schema/schema.sql` to give it the right tables etc.
-4. Create a `private.pem` under `Polybub/.certs/`
-5. **BUILD** with `go mod tidy` to get the modules.
-6. **RUN** with `go run main.go` or the `launch.json` file.
-
-### Remote
-
-To run your web app on a remote server, you need to handle the same things you did to get it running locally (`database, code, secrets, certs`), before running it on a remote machine.
-
-I've provided an example `setup.bash` you need to run as root before using `deploy.yml` to build the project and deploy it remotely via Github Actions. That yml script needs the following secrets:
-
-- `CONFIG` (your json file)
-- `DEPLOY_HOST` (111.22.333.444)
-- `DEPLOY_SSH_PRIVATE_KEY` (---BEGIN ... END---)
-- `DEPLOY_USER` (github_agent)
-
-If you want TLS/SSL (HTTPS) you'll need to change `is-secure:true` and `port:443` in the config.json file AND generate the following files and add them to `.certs` folder on your remote server:
-
-- `tls.pem`
-- `tls.key`
-
-In addition, you may need to run some of the "Other Useful Commands" below to finish setting up your env. For example, if you forgot to change the variables in `setup.bash` those commands will help you fix your server. Regardless, you'll also need to apply schema and add data too to use the app.
-
-## File Tree
-
-Here's a basic overview of where things belong in the project.
+### Helpful Commands:
 
 ```bash
-├── Auth # Basic, OAuth2, JWT, TOTP
-├── Data # Everything for the Database
-│   ├── Services # Backend Logic
-├── Routes # HTTP server
-│   ├── Api # Endpoints that return JSON
-│   ├── Jsend # Structured output for JSON
-│   ├── Ui # Endpoints and templates that return HTML
-│   ├── Static # Public Files (minified CSS / JS)
-├── Tests # Unit tests
-├── Utilities # Logger, list of perms, SMTP, Swagger, Config parsing.
-```
-
-## How To Extend
-
-This section exists to remind me how to add new features to the project. If you read all the sections in order, they walk-through how to add features to your web app.
-
-### Add a Permission
-
-TODO: add this section
-
-### Modify Schema
-
-TODO: add this section
-
-### Add a HTML Page or Component
-
-**Pages:**
-
-To add a new page, go to `PageHandlers.go` and add a simple get handler for your new page. Also, put a new `page.name.html` file into the PageTemplates folder. In that HTML file, define the layout and what components will be included using html/template {{ template "comp.name" }} to reference what you want. Pages should not need much data (app name / user details), but if they do, pass that data into the template `top-down`. Pages (mostly) wrap components in <body> tag.
-
-**Components:**
-
-To add a new component, you'll want to create a new `NameHandler.go` file under ComponentHandlers. You'll also want to add a new `comp.name.html` file into the ComponentTemplates folder. In that HTML file, use {{ define "comp.name" }} to create the template you want to reference in your page. Lastly, to hydrate your component with data, DO NOT pass data into the template. Just use HTMX to call the get endpoint for your component, and lazy load it. This allows for a `bottom-up` data flow for components. Components (mostly) begin with a <section> tag.
-
-### Add an Endpoint
-
-TODO: add this section
-
-### Add a Unit Test
-
-TODO: add this section
-
-## Other useful commands:
-
-The following are commands that may need to be run manually from time-to-time.
-
-#### Run setup on remote target, without copying the file to the target
-
-```bash
-ssh droplet1 'bash -s' < ./setup.bash`
-```
-
-#### Create SSH key for github_agent, to be used in the setup script
-
-```bash
-ssh-keygen -t rsa -b 4096
-```
-
-#### Create cert for server with a passphrase
-
-```bash
+# Create private.pem
 openssl genrsa -out private.pem 4096
-```
 
-#### Create the pepper, don't forget to add to config.json
-
-```bash
+# Create the pepper, don't forget to manually add to config.json
 openssl rand -base64 32
 ```
 
-#### Setup mount to view server files
+## Additional Information
 
-```bash
-sshfs droplet1:/var/www/app/Polybub ~/Remote/mount
-```
+- [READ_DEPLOY.md](./READ_DEPLOY.md) explains the prod deployment process in more detail.
+- [READ_EXTEND.md](./READ_EXTEND.md) explains how to customize / extend this template.
 
-#### Remove mount
+---
 
-```bash
-umount ~/Remote/mount
-```
+# Credits:
 
-#### Start / Stop the app service
+I am deeply grateful to the following people / projects for making Polybub possible:
 
-```bash
-sudo systemctl restart Polybub.service
-sudo systemctl stop Polybub.service
-```
-
-#### Read logs from the server
-
-```bash
-journalctl -u Polybub.service --since="15 min ago"
-```
-
-#### Complete WAL transaction to Sqlite
-
-```bash
-sqlite3 sqlitedb "PRAGMA wal_checkpoint(FULL);"
-```
-
-## Turso Swap
-
-It is actually very easy to swap from embedded sqlite to turso instead. You only need to swap the data package's connection with the turso-friendly equivalent. Use this as your guide:
-https://github.com/ytsruh/gorm-libsql?tab=readme-ov-file#pure-go-usage
-
-I have not tried embedded sqlite with Turso. The fact that this works at all blows my mind. I essentially just replaced the existing sqlite connection with the one documented here. Very easy swap, in my opinion, especially since I already had the URL setup:
-`url := Utilities.GlobalConfig.TursoDatabaseUrl + "?authToken=" + Utilities.GlobalConfig.TursoAuthToken`
-
-## Sqlite Upgrade and migrate procedure
-
-1. commit the code to main
-2. ssh into the DigitalOcean droplet
-3. stop the app with: `sudo systemctl stop Polybub.service`
-4. mount the filesystem `sshfs droplet1:/var/www/app/polybub ~/Remote/mount`
-5. connect the database via mount
-6. run `PRAGMA wal_checkpoint(FULL);` to stop all transactions
-7. apply migrations
-8. disconnect db
-9. unmount with `umount ~/Remote/mount`
-10. run workflow `deploy.yml`
-
-### If you get locked out of digital ocean
-
-I only include this here because it happened three times to me, so I got sick of forgetting how to break back in.
-
-1. reset root password
-2. login to recovery terminal
-3. add to top of /etc/ssh/ssh_config:
-   PasswordAuthentication no
-   PubkeyAuthentication yes
-4. delete files under /etc/ssh/ssh_config.d (99-hardening... etc)
-5. restart ssh `sudo systemctl restart ssh`
-6. try to login again
-
-### Other notes:
-
-Do not ever mount the filesystem while people are using it. Corruption! Instead use the prv-scripts to pull and push the db.
-WAL mode writes to the db ONLY every 1000 pages, which is a ton of edits. That's why it's important to manually close WAL mode before editing.
+- [ThePrimeagen](https://www.youtube.com/c/theprimeagen)
+- [Golang](https://go.dev/)
+- [HTMX](https://htmx.org/)
+- [Bulma](https://bulma.io/)
+- [Gorm](https://gorm.io/)
+- [Sqlite](https://sqlite.org/index.html)
+- [Postgres](https://www.postgresql.org/)
+- [clevergo/jsend](https://github.com/clevergo/jsend)
+- [Rhymond/go-money](github.com/Rhymond/go-money)
+- [go-ozzo/ozzo-validation](github.com/go-ozzo/ozzo-validation)
+- [go-swagno/swagno-http](github.com/go-swagno/swagno-http)

@@ -5,6 +5,9 @@
 # on a remote server. You shouldn't need to run this again. Designed for 
 # root user to execute on an Ubuntu 24.04 (LTS) x64 server with Snap installed already.
 
+# MANUALLY add a PUBLIC key here
+DEPLOY_SSH_PUBLIC_KEY="" # EX: ssh-rsa AAAA...= github_agent
+
 # Add the deployment user
 sudo useradd \
   --system \
@@ -33,8 +36,6 @@ echo "added dir"
 
 # Restrict agent to running in non-interactive mode
 DEPLOY_DTL="no-port-forwarding,no-agent-forwarding,no-X11-forwarding"
-# MANUALLY add a PUBLIC key here
-DEPLOY_SSH_PUBLIC_KEY="" # EX: ssh-rsa AAAA...= github_agent
 cat >> /home/github_agent/.ssh/authorized_keys <<EOF
 $DEPLOY_DTL $DEPLOY_SSH_PUBLIC_KEY
 EOF
@@ -47,20 +48,9 @@ echo 'github_agent ALL=(root) NOPASSWD: \
   /bin/systemctl stop Polybub, \
   /bin/systemctl reset-failed Polybub, \
   /bin/systemctl daemon-reload, \
-  /usr/bin/systemd-run --unit=polybub --property=User=github_agent --property=AmbientCapabilities=CAP_NET_BIND_SERVICE --property=ReadWritePaths=/var/www/app/polybub/.db /var/www/app/polybub/polybub
-  ' | sudo tee /etc/sudoers.d/polybub-deploy
+  /usr/bin/systemd-run --unit=polybub *' | sudo tee /etc/sudoers.d/polybub-deploy
 
 echo "added password-less sudo"
-
-# Or MANUALLY add a sqlitedb file UNDER .db
-sudo mkdir -p /var/www/app/Polybub/.db
-touch /var/www/app/Polybub/.db/sqlitedb
-
-# Or MANUALLY add a private.pem UNDER .certs
-sudo mkdir -p /var/www/app/Polybub/.certs
-touch /var/www/app/Polybub/.certs/private.pem
-
-echo "added placeholder paths and files"
 
 # Then, change ownership on all files:
 sudo chown github_agent:github_agent /var/www/app/Polybub -R

@@ -25,6 +25,12 @@ type Config struct {
 
 var GlobalConfig Config
 
+const (
+	DEV_ENV  = "development"
+	TEST_ENV = "test"
+	PROD_ENV = "production"
+)
+
 func GetConfig() Config {
 	// Use the local file
 	file, err := os.Open("config.json")

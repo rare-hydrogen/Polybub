@@ -1,8 +1,8 @@
-name: Deploy
+name: Deploy VM
 
 on:
-  push:
-    branches: [main]
+  #push:
+  #  branches: [main]
 
   workflow_dispatch:
 
@@ -20,13 +20,12 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version: "1.25"
 
       - name: Build Binary
         env:
           GOOS: linux
           GOARCH: amd64
-          CGO_ENABLED: true
         run: |
           go build -ldflags="-s -w" -o Polybub ./
 
@@ -42,12 +41,35 @@ jobs:
           ssh $SSH_TARGET "sudo systemctl stop Polybub || true"
           ssh $SSH_TARGET "sudo systemctl reset-failed Polybub || true"
 
+      # Secrets
       - name: Copy Secrets to server
         run: |
           cat > config.json <<'EOF'
           ${{ secrets.CONFIG }}
           EOF
           scp config.json $SSH_TARGET:/var/www/app/Polybub/config.json
+
+      - name: Copy private.pem to server
+        run: |
+          cat > private.pem <<'EOF'
+          ${{ secrets.PRIVATE_PEM }}
+          EOF
+          scp private.pem $SSH_TARGET:/var/www/app/Polybub/.certs/private.pem
+
+      # TLS
+      - name: Copy CERT_PEM to server
+        run: |
+          cat > tls.pem <<'EOF'
+          ${{ secrets.CERT_PEM }}
+          EOF
+          scp tls.pem $SSH_TARGET:/var/www/app/Polybub/.certs/tls.pem
+
+      - name: Copy CERT_KEY to server
+        run: |
+          cat > tls.key <<'EOF'
+          ${{ secrets.CERT_KEY }}
+          EOF
+          scp tls.key $SSH_TARGET:/var/www/app/Polybub/.certs/tls.key
 
       - name: Copy Binary to Remote
         run: |
@@ -56,10 +78,8 @@ jobs:
       - name: Start App
         run: |
           ssh $SSH_TARGET "sudo systemctl daemon-reload"
-          ssh $SSH_TARGET "sudo /usr/bin/systemd-run --unit=Polybub --property=User=github_agent --property=ReadWritePaths=/var/www/app/Polybub/.db /var/www/app/Polybub/Polybub"
-
-      - name: Clean up
-        run: |
-          ssh $SSH_TARGET "rm -rf /var/www/app/Polybub/config.json"
-          rm -rf config.json
-          rm -rf ~/.ssh
+          ssh $SSH_TARGET "sudo /usr/bin/systemd-run --unit=polybub \
+            --property=User=github_agent \ 
+            --property=AmbientCapabilities=CAP_NET_BIND_SERVICE \
+            --property=WorkingDirectory=/var/www/app/Polybub \
+            /var/www/app/Polybub/Polybub"

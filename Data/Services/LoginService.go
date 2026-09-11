@@ -92,7 +92,7 @@ func UpdatePasswordAndSalt(ctx context.Context, userId int32, password string) e
 	}
 
 	err := db.Model(&Models.User{}).
-		Where("Id = ?", userId).
+		Where("id = ?", userId).
 		Updates(&user).
 		Error
 	if err != nil {
